@@ -193,6 +193,8 @@ body.auth-gated #app{display:none}
 body:not(.auth-gated) #authGate{display:none}
 body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{display:none !important}
 #authGate{min-height:100vh;display:grid;place-items:center;padding:22px}
+.auth-card #loginForm[hidden],.auth-card #setupScreen[hidden],.auth-card #btnForgotPassword[hidden]{display:none !important}
+.auth-card .setup-note{border-left:3px solid var(--k-proactif);padding:8px 11px;background:var(--soft);border-radius:6px;margin:12px 0}
 .auth-card{width:min(430px,100%);padding:32px;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 35px -20px rgba(25,14,55,.3)}
 .auth-mark{display:inline-flex;background:var(--violet);color:var(--on-violet);font-weight:800;border-radius:12px;padding:9px 12px;margin-bottom:18px;letter-spacing:.04em}
 .auth-card h2{font-size:30px;margin-bottom:12px}
@@ -251,8 +253,8 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 <div id="authGate" role="region" aria-label="Connexion sécurisée">
   <div class="auth-card">
     <div class="auth-mark">FY27</div>
-    <h2 class="display">Opportunités FY27</h2>
-    <p>Connectez-vous avec votre compte autorisé pour accéder au tableau de bord partagé.</p>
+    <h2 class="display" id="authHeading">Opportunités FY27</h2>
+    <p id="authIntro">Connectez-vous avec votre compte autorisé pour accéder au tableau de bord partagé.</p>
     <form id="loginForm">
       <label class="lbl" for="loginEmail">Adresse email</label>
       <input id="loginEmail" type="email" autocomplete="username" placeholder="prenom.nom@entreprise.com" required>
@@ -260,6 +262,16 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
       <input id="loginPassword" type="password" autocomplete="current-password" required>
       <button class="btn primary" type="submit" id="loginButton">Se connecter</button>
     </form>
+    <section id="setupScreen" hidden aria-label="Activation du compte">
+      <p class="setup-note">Votre lien d'invitation ou de récupération a été validé. Définissez votre mot de passe pour accéder à l'application.</p>
+      <form id="setupForm">
+        <label class="lbl" for="setupPassword">Créer mon mot de passe</label>
+        <input id="setupPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8 caractères minimum">
+        <label class="lbl" for="setupPassword2">Confirmer mon mot de passe</label>
+        <input id="setupPassword2" type="password" autocomplete="new-password" minlength="8" required placeholder="Saisir à nouveau le mot de passe">
+        <button class="btn primary" type="submit" id="setupButton">Activer mon compte</button>
+      </form>
+    </section>
     <button class="btn quiet" id="btnForgotPassword" type="button">Mot de passe oublié ?</button>
     <p class="auth-message" id="authMessage" role="status">Initialisation de la connexion…</p>
   </div>
@@ -607,6 +619,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 let sb = null, signedInUser = null, memberRole = null, subscribed = null;
 let saving = false, pending = false, loadBusy = false, saveFailed = false;
 let authBusy = false, recoveryMode = /(?:^|[?#&])type=(?:invite|recovery)(?:&|$)/.test(location.href);
+const needsPasswordSetup = user => user?.user_metadata?.needs_password_setup === true;
+const resetAuthView = () => {
+  $('loginForm').hidden = false;
+  $('btnForgotPassword').hidden = false;
+  $('setupScreen').hidden = true;
+  $('authHeading').textContent = 'Opportunités FY27';
+  $('authIntro').textContent = 'Connectez-vous avec votre compte autorisé pour accéder au tableau de bord partagé.';
+};
+const showPasswordSetup = () => {
+  document.body.classList.add('auth-gated');
+  $('authGate').style.display = 'grid';
+  $('loginForm').hidden = true;
+  $('btnForgotPassword').hidden = true;
+  $('setupScreen').hidden = false;
+  $('authHeading').textContent = 'Activer mon compte';
+  $('authIntro').textContent = 'Bienvenue ! Pour terminer l’activation de votre accès, choisissez votre mot de passe personnel.';
+  authMessage('Votre compte est reconnu. Choisissez et confirmez votre mot de passe.','ok');
+  $('setupPassword').focus();
+};
 let persisted = {opps:new Map(),tasks:new Map(),settings:JSON.stringify({seuil:15})}; // Map id -> { json, revision }
 let reloadTimer = null;
 
@@ -739,7 +770,8 @@ function listenRealtime(){
 function showLogin(msg){
   document.body.classList.add('auth-gated');
   $('authGate').style.display='grid';
-  if(msg) authMessage(msg,'error');
+  resetAuthView();
+  authMessage(msg || 'Saisissez votre email et votre mot de passe.', msg ? 'error' : '');
 }
 
 async function logout(){
@@ -754,9 +786,9 @@ async function handleSession(session){
   if(!session?.user){
     signedInUser=null;memberRole=null;ME='';S=null;
     if(subscribed && sb){await sb.removeChannel(subscribed);subscribed=null;}
-    showLogin();return;
+    showLogin(recoveryMode ? 'Le lien d’activation n’a pas ouvert de session. Vérifiez la redirection Supabase ou demandez un nouveau lien.' : '');return;
   }
-  if(signedInUser?.id===session.user.id && S) { if(recoveryMode){recoveryMode=false;setTimeout(()=>openAccess(true),100);} return; }
+  if(signedInUser?.id===session.user.id && S && !needsPasswordSetup(session.user) && !recoveryMode) return;
   authBusy=true;
   authMessage('Vérification des autorisations…');
   try{
@@ -767,12 +799,15 @@ async function handleSession(session){
       throw new Error("Ce compte n'est pas autorisé. Demandez une invitation à l’administrateur.");
     }
     signedInUser=session.user;memberRole=member.role; ME=member.display_name?.trim() || session.user.email?.split('@')[0] || '';
+    // Le premier accès (ou une récupération de mot de passe) doit se terminer
+    // par la définition du mot de passe, et non par un formulaire de connexion.
+    if(needsPasswordSetup(session.user) || recoveryMode){showPasswordSetup();return;}
     await loadFromServer();
     document.body.classList.remove('auth-gated');
     $('authGate').style.display='none';
     $('btnAccess').textContent='Gestion des accès';
     listenRealtime();
-    if(recoveryMode){recoveryMode=false;setTimeout(()=>openAccess(true),100);}
+    recoveryMode=false;
   }catch(e){signedInUser=null;showLogin(e.message||'Connexion impossible');}
   finally{authBusy=false;}
 }
@@ -857,6 +892,26 @@ async function openAccess(promptPassword=false){
   };
   if(promptPassword) $('ac_pwd').focus();
 }
+
+$('setupForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if(!sb || !signedInUser) {authMessage('Le lien n’est plus valide. Ouvrez un nouveau lien d’activation.','error');return;}
+  const password=$('setupPassword').value;
+  const again=$('setupPassword2').value;
+  if(password.length<8){authMessage('Utilisez un mot de passe de 8 caractères minimum.','error');return;}
+  if(password!==again){authMessage('Les mots de passe ne correspondent pas.','error');return;}
+  const button=$('setupButton');button.disabled=true;button.textContent='Activation…';
+  const {error}=await sb.auth.updateUser({password, data:{needs_password_setup:false}});
+  button.disabled=false;button.textContent='Activer mon compte';
+  if(error){authMessage('Activation impossible : '+error.message,'error');return;}
+  recoveryMode=false;
+  $('setupForm').reset();
+  authMessage('Mot de passe créé. Ouverture du tableau de bord…','ok');
+  signedInUser=null;memberRole=null;S=null;
+  const {data:sessionData,error:sessionError}=await sb.auth.getSession();
+  if(sessionError){showLogin('Mot de passe créé, reconnectez-vous.');return;}
+  await handleSession(sessionData.session);
+});
 
 $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();if(!sb)return;
