@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --paper:#F4F3F8;--surface:#FFFFFF;--ink:#231C3A;--muted:#6E6886;--line:#E3E0EC;--soft:#EEECF4;
+  --violet:#7428E8;--on-violet:#FFFFFF;
+  --k-attente:#2F6BEA;--k-deadline:#D9432B;--k-proactif:#0B8F70;--k-demarrer:#7428E8;
+  --shadow:0 30px 80px -24px rgba(25,14,55,.45);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#15121F;--surface:#1D1929;--ink:#EEEAF8;--muted:#A39DB8;--line:#302A42;--soft:#262135;
+    --violet:#A47BFF;--on-violet:#15121F;
+    --k-attente:#6F98FF;--k-deadline:#FF7A63;--k-proactif:#3CCCA4;--k-demarrer:#A47BFF;
+    --shadow:0 30px 80px -24px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.display{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif}
+:focus-visible{outline:2px solid var(--violet);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1280px;margin:0 auto;padding:28px 28px 56px}
+
+/* En-tête */
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-size:36px;letter-spacing:-.025em;margin:0;line-height:1.02}
+.sub{margin:6px 0 0;color:var(--muted)}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.save{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;margin-right:6px}
+.save::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--k-proactif)}
+.save.busy::before{background:var(--muted)}
+.save.err{color:var(--k-deadline)}
+.save.err::before{background:var(--k-deadline)}
+.btn{font:inherit;font-weight:600;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;border-radius:10px;cursor:pointer;line-height:1.2}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--violet);border-color:var(--violet);color:var(--on-violet)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.quiet{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.quiet:hover{color:var(--ink);border-color:var(--line)}
+.btn.danger{color:var(--k-deadline)}
+.btn.danger.armed{background:var(--k-deadline);border-color:var(--k-deadline);color:#fff}
+
+/* Indicateurs */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px}
+.kpi{font:inherit;color:inherit;text-align:left;background:var(--surface);border:0;cursor:pointer;padding:20px 20px 18px;position:relative;display:flex;flex-direction:column;gap:5px}
+.kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+.kpi:hover{background:color-mix(in srgb,var(--soft) 70%,var(--surface))}
+.kpi[aria-pressed="true"]{background:color-mix(in srgb,var(--c) 8%,var(--surface))}
+.kpi[aria-pressed="true"]::before{transform:scaleX(1)}
+.kpi-num{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-size:56px;line-height:.95;letter-spacing:-.04em;color:var(--c);font-variant-numeric:tabular-nums}
+.kpi-num small{font-size:19px;color:var(--muted);font-weight:500;letter-spacing:0;margin-left:5px}
+.kpi-label{font-weight:700;font-size:15.5px;margin-top:4px}
+.kpi-rule{font-size:12.5px;color:var(--muted);line-height:1.4}
+
+.filterbar{min-height:34px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 6px 5px 12px;font-weight:600}
+.chip b{color:var(--c)}
+.chip button{font:inherit;font-size:13px;border:0;background:var(--soft);color:var(--muted);border-radius:999px;padding:3px 10px;cursor:pointer}
+.chip button:hover{color:var(--ink)}
+
+/* Panneaux */
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tab{font:inherit;font-weight:600;font-size:16px;background:none;border:0;padding:10px 0 13px;color:var(--muted);cursor:pointer;position:relative;display:inline-flex;align-items:center;gap:8px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--violet);border-radius:3px 3px 0 0}
+.tab .badge{font-size:12.5px;font-weight:700;background:var(--soft);color:var(--muted);padding:1px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"] .badge{background:var(--violet);color:var(--on-violet)}
+.is-hidden{display:none}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 22px 12px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:22px;margin:0;letter-spacing:-.015em;font-weight:700}
+h2 .count{color:var(--muted);font-weight:500;font-size:16px;margin-left:6px;font-family:"Instrument Sans",system-ui,sans-serif}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 12px}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.seg{display:inline-flex;background:var(--soft);border-radius:10px;padding:3px}
+.seg button{font:inherit;border:0;background:transparent;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(35,28,58,.14)}
+.toggle{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.toggle input{accent-color:var(--violet);width:15px;height:15px;margin:0}
+input,select,textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 11px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--violet);outline-offset:0;border-color:transparent}
+select.small,input.small{padding:6px 10px;font-size:13px}
+
+.group{margin-top:14px}
+.group-head{display:flex;align-items:baseline;gap:8px;font-weight:700;font-size:14px;padding:6px 0 8px;border-bottom:1px solid var(--line)}
+.group-head .n{color:var(--muted);font-weight:500;font-size:13px}
+.group-head .tag{font-size:11.5px;font-weight:600;background:var(--soft);color:var(--muted);padding:2px 8px;border-radius:999px}
+.group-head.warn{color:var(--k-deadline)}
+.group-head .link{margin-left:auto;font:inherit;font-size:12.5px;font-weight:600;color:var(--violet);background:none;border:0;padding:2px 4px;cursor:pointer;border-radius:6px}
+.group-head .link:hover{text-decoration:underline;text-underline-offset:3px}
+.synth{width:100%;min-height:340px;font-size:14px;line-height:1.55;background:var(--paper);white-space:pre-wrap}
+.field.synth-stats{display:flex;flex-direction:row;align-items:baseline;gap:6px 20px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.synth-stats b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:22px;color:var(--ink);margin-right:5px;font-variant-numeric:tabular-nums}
+.synth-stats .late b{color:var(--k-deadline)}
+.task{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:12px;align-items:start;padding:11px 0;border-bottom:1px solid var(--soft)}
+.task:last-child{border-bottom:0}
+.check{width:20px;height:20px;border:1.5px solid var(--muted);border-radius:6px;margin-top:1px;display:grid;place-items:center;background:transparent;cursor:pointer;padding:0}
+.check:hover{border-color:var(--k-proactif)}
+.task.done .check{background:var(--k-proactif);border-color:var(--k-proactif)}
+.task.done .check::after{content:"";width:5px;height:10px;border:solid var(--surface);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.t-title{font:inherit;font-weight:500;color:var(--ink);background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.t-title:hover{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.task.done .t-title{text-decoration:line-through;color:var(--muted)}
+.t-meta{display:flex;gap:4px 12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:3px}
+.t-meta .who{color:var(--ink);font-weight:600}
+.t-meta .nobody{color:var(--k-deadline);font-weight:600}
+.t-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.due{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.due.soon{background:color-mix(in srgb,var(--k-deadline) 14%,transparent);color:var(--k-deadline)}
+.due.late{background:var(--k-deadline);color:#fff}
+.state{font:inherit;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;cursor:pointer;white-space:nowrap}
+.state[data-s="À lancer"]{color:var(--k-demarrer);border-color:color-mix(in srgb,var(--k-demarrer) 45%,transparent)}
+.state[data-s="En cours"]{color:var(--k-attente);border-color:color-mix(in srgb,var(--k-attente) 45%,transparent)}
+.state[data-s="Fait"]{color:var(--k-proactif);border-color:color-mix(in srgb,var(--k-proactif) 45%,transparent)}
+.empty{padding:22px 0;color:var(--muted);font-size:14px}
+
+.opp,.opp-cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.5fr) 160px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px;gap:16px;align-items:center}
+.opp-cols{font-size:12.5px;font-weight:600;color:var(--muted);padding:0 0 8px;border-bottom:1px solid var(--line)}
+.opp-cols span:nth-last-child(-n+2){text-align:right}
+.opp{font:inherit;color:inherit;text-align:left;background:transparent;border:0;cursor:pointer;padding:12px 10px;margin:0 -10px;border-radius:12px;width:calc(100% + 20px)}
+.cell{font-size:14px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell.muted{color:var(--muted)}
+.cell.clients{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35;font-size:13.5px}
+.ntasks{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.ntasks.zero{color:var(--k-deadline)}
+.opp:hover{background:var(--soft)}
+.opp + .opp{box-shadow:0 -1px 0 var(--soft)}
+.opp:hover + .opp,.opp:hover{box-shadow:none}
+.opp-name{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opp-sub{font-size:12.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage{display:flex;flex-direction:column;gap:5px;min-width:0}
+.meter{display:flex;gap:2px}
+.meter i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--violet)}
+.stage.delivery .meter i.on{background:var(--k-proactif)}
+.stage.delivery span{color:var(--k-proactif);font-weight:600}
+.stage .urgence{align-self:flex-start;max-width:100%;font-size:12px;font-weight:700;color:var(--k-deadline);background:color-mix(in srgb,var(--k-deadline) 13%,transparent);border:1px solid color-mix(in srgb,var(--k-deadline) 35%,transparent);padding:3px 9px;border-radius:8px;line-height:1.3;white-space:normal !important;overflow:visible !important}
+select.is-urgence{color:var(--k-deadline);font-weight:700;background:color-mix(in srgb,var(--k-deadline) 10%,var(--paper));border-color:color-mix(in srgb,var(--k-deadline) 40%,transparent)}
+.stage .perdu{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--soft);border:1px solid var(--line);padding:3px 9px;border-radius:8px;line-height:1.3}
+.opp.is-perdu .opp-name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.stage.standby .meter i{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 5px)}
+.stage span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.odate{text-align:right;font-size:12.5px;line-height:1.25}
+.odate b{display:block;font-weight:700;font-variant-numeric:tabular-nums}
+.odate span{color:var(--muted)}
+.odate.soon b{color:var(--k-deadline)}
+.odate.past b{color:var(--muted);font-weight:600}
+
+/* Fenêtres d'édition */
+dialog{border:0;padding:0;border-radius:20px;width:min(680px,calc(100vw - 28px));background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+dialog.wide{width:min(1120px,calc(100vw - 28px))}
+.slide-frame{border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 30px -12px rgba(25,14,55,.3);border:1px solid var(--line)}
+.slide{position:relative;aspect-ratio:16/9;width:100%;background:#fff;container-type:inline-size;font-family:Calibri,Carlito,"Instrument Sans",Arial,sans-serif;line-height:1.12}
+.s-rect{position:absolute;border-radius:1.2cqw}
+.s-text{position:absolute;display:flex;flex-direction:column;overflow:hidden}
+dialog::backdrop{background:rgba(22,14,44,.42);backdrop-filter:blur(2px)}
+dialog[open]{animation:rise .2s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dlg-head{padding:22px 26px 4px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dlg-head h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:24px;letter-spacing:-.015em;margin:0;line-height:1.1}
+.x{font:inherit;font-size:22px;line-height:1;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:8px}
+.x:hover{background:var(--soft);color:var(--ink)}
+.dlg-body{padding:14px 26px 18px;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-height:68vh;overflow:auto}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.full{grid-column:1/-1}
+.lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.help{font-size:12px;color:var(--muted)}
+textarea{resize:vertical;min-height:70px;line-height:1.4}
+.check-line{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer}
+.check-line input{accent-color:var(--violet);width:16px;height:16px;margin:2px 0 0}
+.sublist{grid-column:1/-1;border-top:1px solid var(--line);padding-top:14px}
+.sublist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.sublist-head b{font-size:15px}
+.dlg-foot{display:flex;justify-content:space-between;gap:10px;padding:14px 26px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.dlg-foot .right{display:flex;gap:8px}
+.set-row{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--soft)}
+.set-row:last-child{border-bottom:0}
+.set-row p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.alert{display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:color-mix(in srgb,var(--k-deadline) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--k-deadline) 45%,transparent);color:var(--ink);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:14px}
+.alert.show{display:flex}
+.alert b{color:var(--k-deadline)}
+.alert.info{background:color-mix(in srgb,var(--violet) 9%,var(--surface));border-color:color-mix(in srgb,var(--violet) 40%,transparent)}
+.alert.info b{color:var(--violet)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+
+/* Connexion et gestion des accès : présentation uniquement, les droits sont vérifiés par Supabase/RLS. */
+body.auth-gated #app{display:none}
+body:not(.auth-gated) #authGate{display:none}
+body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{display:none !important}
+#authGate{min-height:100vh;display:grid;place-items:center;padding:22px}
+.auth-card{width:min(430px,100%);padding:32px;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 35px -20px rgba(25,14,55,.3)}
+.auth-mark{display:inline-flex;background:var(--violet);color:var(--on-violet);font-weight:800;border-radius:12px;padding:9px 12px;margin-bottom:18px;letter-spacing:.04em}
+.auth-card h2{font-size:30px;margin-bottom:12px}
+.auth-card p{color:var(--muted);font-size:14px}
+.auth-card form{display:grid;gap:8px;margin-top:24px}
+.auth-card input{margin-bottom:9px;padding:12px}
+.auth-card form button{margin:5px 0 0;padding:12px}
+.auth-card #btnForgotPassword{margin-top:12px}
+.auth-message{min-height:24px;margin:8px 0 0}
+.auth-message.error{color:var(--k-deadline)}
+.auth-message.ok{color:var(--k-proactif)}
+.access-card{grid-column:1/-1;padding:14px;border:1px solid var(--line);border-radius:14px}
+.access-card h4{font-size:16px;margin:0 0 7px}
+.access-card p{font-size:13px;color:var(--muted);margin:0 0 14px}
+.access-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.access-grid .field{min-width:0}
+.access-grid input{width:100%}
+.access-list{margin:0;padding:0;list-style:none}
+.access-list li{padding:9px 0;border-top:1px solid var(--soft);display:flex;justify-content:space-between;align-items:center;gap:10px;overflow-wrap:anywhere}
+.access-pill{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.access-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:560px){.access-grid{grid-template-columns:1fr}.auth-card{padding:22px}}
+
+@media (max-width:1100px){
+  .kpi-num{font-size:46px}
+}
+@media (max-width:980px){
+  .opp,.opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 140px minmax(0,1fr) 56px 88px}
+  .opp .c-montant,.opp-cols .c-montant{display:none}
+}
+@media (max-width:560px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:28px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi:last-child{grid-column:1/-1}
+  .kpi{padding:16px 16px 14px}
+  .kpi-num{font-size:42px}
+  .kpi-rule{display:none}
+  .opp,.opp-cols{grid-template-columns:minmax(0,1fr) 80px}
+  .opp > :not(:first-child):not(:last-child),.opp-cols > :not(:first-child):not(:last-child){display:none}
+  .tabs{gap:18px}
+  .dlg-body{grid-template-columns:1fr}
+  .panel{padding:16px 16px 10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before{animation:none !important;transition:none !important}
+}
+@media print{
+  body{background:#fff}
+  .top-right,.tools,.chip button,.tabs{display:none !important}
+  .is-hidden{display:block !important}
+  .panel{margin-bottom:16px}
+  .panel,.kpis{border-color:#ccc}
+}
+</style></head><body class="auth-gated">
+<div id="authGate" role="region" aria-label="Connexion sécurisée">
+  <div class="auth-card">
+    <div class="auth-mark">FY27</div>
+    <h2 class="display">Opportunités FY27</h2>
+    <p>Connectez-vous avec votre compte autorisé pour accéder au tableau de bord partagé.</p>
+    <form id="loginForm">
+      <label class="lbl" for="loginEmail">Adresse email</label>
+      <input id="loginEmail" type="email" autocomplete="username" placeholder="prenom.nom@entreprise.com" required>
+      <label class="lbl" for="loginPassword">Mot de passe</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required>
+      <button class="btn primary" type="submit" id="loginButton">Se connecter</button>
+    </form>
+    <button class="btn quiet" id="btnForgotPassword" type="button">Mot de passe oublié ?</button>
+    <p class="auth-message" id="authMessage" role="status">Initialisation de la connexion…</p>
+  </div>
+</div>
+<div class="wrap" id="app">
+  <header class="top">
+    <div>
+      <h1>Opportunités FY27</h1>
+    </div>
+    <div class="top-right">
+      <span class="save busy" id="save" aria-live="polite">Chargement…</span>
+      <button class="btn quiet" id="btnAccess">Gestion des accès</button>
+      <button class="btn quiet" id="btnLogout">Déconnexion</button>
+      <button class="btn quiet" id="btnSettings">Réglages et export</button>
+      <button class="btn" id="btnShare">Télécharger pour partager</button>
+      <button class="btn" id="btnSlide">Slide hebdo</button>
+      <button class="btn" id="btnNewTask">Nouvelle tâche</button>
+      <button class="btn primary" id="btnNewOpp">Nouvelle opportunité</button>
+    </div>
+  </header>
+
+  <div class="alert" id="alert" role="alert"><span id="alertText"></span><button class="btn" id="alertBackup">Exporter la sauvegarde</button></div>
+
+  <section class="kpis" id="kpis" aria-label="Indicateurs clés"></section>
+  <div class="filterbar" id="filterbar"></div>
+
+  <nav class="tabs" role="tablist" aria-label="Vues du dashboard">
+    <button class="tab" role="tab" id="tab-opps" data-tab="opps" aria-controls="panel-opps" aria-selected="true">Opportunités<span class="badge" id="oppCount"></span></button>
+    <button class="tab" role="tab" id="tab-tasks" data-tab="tasks" aria-controls="panel-tasks" aria-selected="false">Tâches assignées<span class="badge" id="taskCount"></span></button>
+  </nav>
+
+  <main>
+    <section class="panel" id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
+      <div class="panel-head">
+        <h2>Opportunités</h2>
+        <input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité">
+      </div>
+      <p class="hint">Triées par date clé client (écrit, oral, décision) la plus proche. Cliquez sur une ligne pour modifier la fiche et ses tâches.</p>
+      <div class="opp-cols" aria-hidden="true"><span>Sujet</span><span>Contacts Michelin</span><span>Statut</span><span>Lead local</span><span class="c-montant">Montant estimé</span><span>Tâches</span><span>Date clé client</span></div>
+      <div id="oppList"></div>
+    </section>
+
+    <section class="panel is-hidden" id="panel-tasks" role="tabpanel" aria-labelledby="tab-tasks">
+      <div class="panel-head">
+        <h2>Tâches assignées</h2>
+        <div class="seg" role="group" aria-label="Regrouper les tâches">
+          <button data-group="person" aria-pressed="true">Par personne</button>
+          <button data-group="date" aria-pressed="false">Par échéance</button>
+          <button data-group="opp" aria-pressed="false">Par opportunité</button>
+        </div>
+      </div>
+      <p class="hint" id="taskHint"></p>
+      <div class="tools">
+        <select class="small" id="personFilter" aria-label="Filtrer par personne"></select>
+        <label class="toggle"><input type="checkbox" id="showDone"> Afficher les tâches faites</label>
+        <button class="btn" id="btnSynth" style="margin-left:auto">Synthèse par personne</button>
+      </div>
+      <div id="taskList"></div>
+    </section>
+  </main>
+</div>
+<dialog id="dlgOpp"></dialog>
+<dialog id="dlgTask"></dialog>
+<dialog id="dlgSet"></dialog>
+<dialog id="dlgSynth"></dialog>
+<dialog id="dlgSlide" class="wide"></dialog>
+<dialog id="dlgAccess"></dialog>
+<input type="file" id="fileImport" accept="application/json,.json" hidden="">
+<div class="toast" id="toast" role="status"></div>
+<datalist id="people"></datalist>
+<script>
+// À renseigner AVANT de publier sur GitHub Pages : uniquement la clé "publishable".
+// NE JAMAIS METTRE de clé sb_secret_ ou service_role dans ce fichier.
+window.DASH_SUPABASE_URL = 'https://kbupzecuqcnauzaojgfd.supabase.co';
+window.DASH_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IGWGFVWTLKQxGHtIMjtVQ_7Wf8olK8';
+window.__DASH_DATA__ = null; // Les données réelles sont exclusivement dans Supabase.
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const KEY = 'opportunites-fy27-dashboard';
+// Copie intacte de la page, pour fabriquer la version à partager
+let PRISTINE = '';
+try {
+  PRISTINE = ['authGate','app','dlgOpp','dlgTask','dlgSet','dlgSynth','dlgSlide','dlgAccess','fileImport','toast','people']
+    .map(id => document.getElementById(id)).filter(Boolean).map(el => el.outerHTML).join('\n');
+} catch(e){ PRISTINE = ''; }
+const EMBED = window.__DASH_DATA__ || null;
+let fromShare = document.body.classList.contains('share-mode') && !!EMBED;
+let ME = ''; // Nom du membre connecté, renseigné après validation du compte Supabase.
+const STAGES = ['Comprendre le besoin','Lancer la rédaction','Ecrit en cours','Oral en préparation','Oral passé','En attente du résultat','Gagné','En cours de delivery'];
+const URGENCE = 'Urgence non prévue détectée';
+const PERDU = 'Perdu';
+const WON = ['Gagné','En cours de delivery'];
+const STATUTS = [...STAGES, URGENCE, 'Stand-by', PERDU];
+const STEPS = STAGES.length;
+const WAIT = ['Oral passé','En attente du résultat'];
+const STATES = ['À lancer','En cours','Fait'];
+const KPIS = [
+  {k:'attente',  label:"Attente de décision client", c:'var(--k-attente)'},
+  {k:'deadline', label:'Deadline proche',        c:'var(--k-deadline)'},
+  {k:'gagne',    label:'Gagnées',                c:'var(--k-proactif)'},
+  {k:'perdu',    label:'Perdues',                c:'var(--muted)'},
+  {k:'sansdate', label:'Sans date',              c:'var(--k-demarrer)'}
+];
+
+const SEED = {settings:{seuil:15},opps:[],tasks:[]};
+
+/* ---------- État ---------- */
+let S = null;
+const ui = {tab:'opps', kpi:null, group:'person', showDone:false, person:'', q:''};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const today = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+const diff = iso => Math.round((new Date(iso + 'T00:00:00') - today) / 86400000);
+const fmt = iso => new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+const splitPeople = s => String(s || '').split(/\s*(?:,|\/|&|\n|\bet\b)\s*/).map(x => x.replace(/\(.*?\)/g,'').replace(/:.*$/,'').trim()).filter(Boolean);
+const oppById = id => S.opps.find(o => o.id === id);
+
+function isoWeek(d){ const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y = new Date(Date.UTC(t.getUTCFullYear(),0,1)); return Math.ceil(((t - y) / 86400000 + 1) / 7); }
+
+/* ---------- Règles des indicateurs ---------- */
+function metrics(o){
+  const seuil = Number(S.settings.seuil) || 15;
+  const open = S.tasks.filter(t => t.oppId === o.id && t.state !== 'Fait');
+  const won = WON.includes(o.statut);
+  const closed = o.statut === PERDU || won;
+  const cd = clientDate(o);
+  const attente = !closed && (WAIT.includes(o.statut) || !!o.attente);
+  const oppDates = [['dateEcrit','Écrit'],['dateOral','Oral'],['dateDecision','Décision']]
+    .filter(([k]) => o[k]).map(([k,l]) => ({d:o[k], l, n:diff(o[k])}));
+  const taskDates = open.filter(t => t.due).map(t => ({d:t.due, l:'Tâche', n:diff(t.due)}));
+  const urgent = [...oppDates.filter(x => x.n >= 0 && x.n <= seuil), ...taskDates.filter(x => x.n <= seuil)].sort((a,b) => a.n - b.n);
+  const upcoming = [...oppDates.filter(x => x.n >= 0), ...taskDates].sort((a,b) => a.n - b.n);
+  const demarrer = open.length === 0 ? !attente : !open.some(t => t.state === 'En cours');
+  // Deadline proche : écrit ou oral à venir, hors attente de décision client
+  const deadline = !closed && !attente && ['dateEcrit','dateOral'].some(k => o[k] && diff(o[k]) >= 0);
+  return {attente, deadline, gagne: won, perdu: o.statut === PERDU, sansdate: !closed && !cd, proactif: o.type === 'Proactive', demarrer, next: closed ? null : (upcoming[0] || null)};
+}
+function ruleText(k){
+  const s = S.settings.seuil;
+  return {
+    attente:"Statut « En attente du résultat » ou « Oral passé », ou case cochée dans la fiche.",
+    deadline:"Une date d'écrit ou d'oral est fixée et à venir, hors attente de décision client.",
+    gagne:"Statut « Gagné » ou « En cours de delivery ».",
+    perdu:"Statut « Perdu ».",
+    sansdate:"Aucune date clé client renseignée : à obtenir du client.",
+    proactif:"Opportunités initiées par Accenture, sans demande du client.",
+    demarrer:"Des tâches sont prévues, mais aucune n'a démarré : elles sont toutes « À lancer »."
+  }[k];
+}
+
+/* ---------- Rendu ---------- */
+function render(){
+  const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
+  renderKpis(M); renderFilter(); renderTasks(M); renderOpps(M); renderPeople();
+}
+
+function renderKpis(M){
+  $('kpis').innerHTML = KPIS.map(K => {
+    const n = S.opps.filter(o => M.get(o.id)[K.k]).length;
+    return `<button class="kpi" style="--c:${K.c}" data-kpi="${K.k}" aria-pressed="${ui.kpi === K.k}">
+      <span class="kpi-num">${n}<small>/ ${S.opps.length}</small></span>
+      <span class="kpi-label">${K.label}</span>
+      <span class="kpi-rule">${ruleText(K.k)}</span>
+    </button>`;
+  }).join('');
+}
+
+function renderFilter(){
+  const K = KPIS.find(x => x.k === ui.kpi);
+  $('filterbar').innerHTML = K
+    ? `<span class="chip" style="--c:${K.c}">Filtre : <b>${K.label.toLowerCase()}</b><button data-clear>Retirer le filtre</button></span>`
+    : `<span>Cliquez sur un indicateur pour filtrer les deux onglets.</span>`;
+}
+
+function visibleOppIds(M){
+  return new Set(S.opps.filter(o => !ui.kpi || M.get(o.id)[ui.kpi]).map(o => o.id));
+}
+
+function dueChip(t){
+  if (!t.due) return '';
+  const n = diff(t.due);
+  const cls = t.state === 'Fait' ? '' : n < 0 ? 'late' : n <= 3 ? 'soon' : '';
+  const txt = n === 0 ? "Aujourd'hui" : n === 1 ? 'Demain' : n < 0 ? `En retard, ${fmt(t.due)}` : fmt(t.due);
+  return `<span class="due ${cls}">${txt}</span>`;
+}
+
+function taskRow(t, showOwner){
+  const o = oppById(t.oppId);
+  const owners = splitPeople(t.owner);
+  const who = owners.length ? `<span class="who">${esc(t.owner)}</span>` : `<span class="nobody">Sans porteur</span>`;
+  return `<div class="task ${t.state === 'Fait' ? 'done' : ''}">
+    <button class="check" data-check="${t.id}" aria-label="Marquer comme ${t.state === 'Fait' ? 'non faite' : 'faite'}"></button>
+    <div>
+      <button class="t-title" data-edit-task="${t.id}">${esc(t.titre)}</button>
+      <div class="t-meta">${showOwner ? who : ''}<span>${esc(o ? o.sujet : 'Opportunité supprimée')}</span></div>
+    </div>
+    <div class="t-right">${dueChip(t)}<button class="state" data-s="${t.state}" data-cycle="${t.id}" title="Changer l'état">${t.state}</button></div>
+  </div>`;
+}
+
+function sortTasks(a,b){
+  const d = (a.state === 'Fait') - (b.state === 'Fait'); if (d) return d;
+  const da = a.due ? diff(a.due) : 9999, db = b.due ? diff(b.due) : 9999; if (da !== db) return da - db;
+  return STATES.indexOf(b.state) - STATES.indexOf(a.state);
+}
+
+function renderTasks(M){
+  const ids = visibleOppIds(M);
+  let list = S.tasks.filter(t => ids.has(t.oppId) || !oppById(t.oppId));
+  if (!ui.showDone) list = list.filter(t => t.state !== 'Fait');
+  if (ui.person) list = list.filter(t => ui.person === '__none' ? splitPeople(t.owner).length === 0 : splitPeople(t.owner).includes(ui.person));
+  list.sort(sortTasks);
+  const openCount = list.filter(t => t.state !== 'Fait').length;
+  $('taskCount').textContent = openCount;
+
+  const hints = {
+    person:"Regroupées par porteur. Vos tâches d'abord ; les autres groupes sont vos relances.",
+    date:"Regroupées par urgence, des retards jusqu'aux tâches sans date.",
+    opp:"Regroupées par opportunité, dans l'ordre de la liste de droite."
+  };
+  $('taskHint').textContent = hints[ui.group];
+
+  if (!list.length){ $('taskList').innerHTML = `<p class="empty">Aucune tâche ouverte pour ce filtre. Ajoutez-en une avec « Nouvelle tâche ».</p>`; return; }
+
+  const groups = new Map();
+  const add = (key, label, t, extra={}) => { if (!groups.has(key)) groups.set(key, {label, items:[], ...extra}); groups.get(key).items.push(t); };
+
+  if (ui.group === 'person'){
+    list.forEach(t => {
+      const ps = splitPeople(t.owner);
+      if (!ps.length) add('~none', 'Sans porteur', t, {warn:true, tag:'à attribuer'});
+      ps.forEach(p => add(p === ME ? '!' + p : p, p, t, p === ME ? {tag:'moi', person:p} : {person:p}));
+    });
+  } else if (ui.group === 'date'){
+    const order = ['late','week','later','none'];
+    const lbl = {late:'En retard', week:'Dans les 7 jours', later:'Plus tard', none:'Sans date'};
+    list.forEach(t => {
+      const n = t.due ? diff(t.due) : null;
+      const k = n === null ? 'none' : (n < 0 && t.state !== 'Fait') ? 'late' : n <= 7 ? 'week' : 'later';
+      add(order.indexOf(k) + k, lbl[k], t, k === 'late' ? {warn:true} : {});
+    });
+  } else {
+    const rank = new Map(oppOrder(M).map((o,i) => [o.id, i]));
+    list.forEach(t => { const o = oppById(t.oppId); add(String(rank.get(t.oppId) ?? 999).padStart(4,'0'), o ? o.sujet : 'Opportunité supprimée', t); });
+  }
+
+  const keys = [...groups.keys()].sort((a,b) => a.localeCompare(b, 'fr'));
+  $('taskList').innerHTML = keys.map(k => {
+    const g = groups.get(k);
+    const n = g.items.filter(t => t.state !== 'Fait').length;
+    return `<div class="group">
+      <div class="group-head ${g.warn ? 'warn' : ''}">${esc(g.label)}${g.tag ? `<span class="tag">${g.tag}</span>` : ''}<span class="n">${n} ouverte${n > 1 ? 's' : ''}</span>${g.person ? `<button class="link" data-synth="${esc(g.person)}">Synthèse</button>` : ''}</div>
+      ${g.items.map(t => taskRow(t, ui.group !== 'person')).join('')}
+    </div>`;
+  }).join('');
+}
+
+// Date clé client : écrit, oral ou décision. La prochaine à venir, sinon la plus récente passée.
+function clientDate(o){
+  const all = [['dateEcrit','Écrit'],['dateOral','Oral'],['dateDecision','Décision']]
+    .filter(([k]) => o[k]).map(([k,l]) => ({d:o[k], l, n:diff(o[k])}));
+  if (!all.length) return null;
+  const fut = all.filter(x => x.n >= 0).sort((a,b) => a.n - b.n);
+  if (fut.length) return {...fut[0], past:false};
+  return {...all.sort((a,b) => b.n - a.n)[0], past:true};
+}
+function oppOrder(M){
+  return [...S.opps].sort((a,b) => {
+    const ua = a.statut === URGENCE, ub = b.statut === URGENCE;
+    if (ua !== ub) return ua ? -1 : 1;
+    const pa = a.statut === PERDU, pb = b.statut === PERDU;
+    if (pa !== pb) return pa ? 1 : -1;
+    const ca = clientDate(a), cb = clientDate(b);
+    const ra = !ca ? 2 : ca.past ? 1 : 0, rb = !cb ? 2 : cb.past ? 1 : 0;
+    if (ra !== rb) return ra - rb;
+    if (ra === 0) return ca.n - cb.n;
+    if (ra === 1) return cb.n - ca.n;
+    return STATUTS.indexOf(a.statut) - STATUTS.indexOf(b.statut) || a.sujet.localeCompare(b.sujet, 'fr');
+  });
+}
+
+function stageHtml(statut){
+  if (statut === URGENCE) return `<div class="stage"><span class="urgence" title="${URGENCE}">${URGENCE}</span></div>`;
+  if (statut === PERDU) return `<div class="stage"><span class="perdu">Perdu</span></div>`;
+  if (statut === 'Stand-by') return `<div class="stage standby"><div class="meter">${'<i></i>'.repeat(STEPS)}</div><span>Stand-by</span></div>`;
+  const i = STATUTS.indexOf(statut);
+  const bars = Array.from({length:STEPS}, (_,k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('');
+  return `<div class="stage ${statut === 'En cours de delivery' || statut === 'Gagné' ? 'delivery' : ''}" title="Étape ${i + 1} sur ${STEPS}"><div class="meter">${bars}</div><span>${esc(statut || 'Sans statut')}</span></div>`;
+}
+
+function renderOpps(M){
+  const ids = visibleOppIds(M);
+  const q = ui.q.trim().toLowerCase();
+  const list = oppOrder(M).filter(o => ids.has(o.id)).filter(o => !q || [o.sujet,o.lead,o.contacts,o.acn,o.details].join(' ').toLowerCase().includes(q));
+  $('oppCount').textContent = list.length;
+  if (!list.length){ $('oppList').innerHTML = `<p class="empty">Aucune opportunité ne correspond. Modifiez la recherche ou retirez le filtre.</p>`; }
+  else $('oppList').innerHTML = list.map(o => {
+    const m = M.get(o.id);
+    const open = S.tasks.filter(t => t.oppId === o.id && t.state !== 'Fait').length;
+    const clients = String(o.contacts || '').split('\n').map(x => x.trim()).filter(Boolean).join(', ');
+    const cd = clientDate(o);
+    const date = o.statut === PERDU ? `<div class="odate"><span>Clôturée</span></div>`
+      : !cd && WON.includes(o.statut) ? `<div class="odate"><span>Gagnée</span></div>`
+      : !cd ? `<div class="odate"><span>À définir</span></div>`
+      : cd.past ? `<div class="odate past"><b>${fmt(cd.d)}</b><span>${cd.l}, passée</span></div>`
+      : `<div class="odate ${cd.n <= 3 ? 'soon' : ''}"><b>${cd.n === 0 ? "Aujourd'hui" : cd.n === 1 ? 'Demain' : fmt(cd.d)}</b><span>${cd.l}</span></div>`;
+    return `<button class="opp ${o.statut === PERDU ? 'is-perdu' : ''}" data-edit-opp="${o.id}">
+      <div style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>
+      <span class="cell clients ${clients ? '' : 'muted'}" title="${esc(clients)}">${esc(clients || 'À identifier')}</span>
+      ${stageHtml(o.statut)}
+      <span class="cell ${o.lead ? '' : 'muted'}" title="${esc(o.lead)}">${esc(o.lead || 'À définir')}</span>
+      <span class="cell c-montant ${o.montant ? '' : 'muted'}" title="${esc(o.montant)}">${esc(o.montant || 'À chiffrer')}</span>
+      <span class="ntasks ${open ? '' : 'zero'}" title="Tâches ouvertes">${open}</span>
+      ${date}
+    </button>`;
+  }).join('');
+}
+
+function allPeople(){
+  const set = new Set();
+  S.tasks.forEach(t => splitPeople(t.owner).forEach(p => set.add(p)));
+  S.opps.forEach(o => { splitPeople(o.lead).forEach(p => set.add(p)); String(o.acn||'').split('\n').forEach(l => splitPeople(l).forEach(p => set.add(p))); });
+  return [...set].filter(p => p.length > 2).sort((a,b) => a.localeCompare(b,'fr'));
+}
+function renderPeople(){
+  const owners = new Set(); let none = false;
+  S.tasks.forEach(t => { const ps = splitPeople(t.owner); if (!ps.length) none = true; ps.forEach(p => owners.add(p)); });
+  const sorted = [...owners].sort((a,b) => a === ME ? -1 : b === ME ? 1 : a.localeCompare(b,'fr'));
+  if (ui.person && ui.person !== '__none' && !owners.has(ui.person)) ui.person = '';
+  $('personFilter').innerHTML = `<option value="">Toutes les personnes</option>` + sorted.map(p => `<option value="${esc(p)}" ${ui.person === p ? 'selected' : ''}>${esc(p)}${p === ME ? ' (moi)' : ''}</option>`).join('') + (none ? `<option value="__none" ${ui.person === '__none' ? 'selected' : ''}>Sans porteur</option>` : '');
+  $('people').innerHTML = allPeople().map(p => `<option value="${esc(p)}">`).join('');
+}
+
+/* ---------- Enregistrement ---------- */
+let saveTimer, locked = false;
+function setSave(cls, txt){ const el = $('save'); el.className = 'save ' + cls; el.textContent = txt; }
+function alertMsg(html, info){ $('alertText').innerHTML = html; $('alert').classList.toggle('show', !!html); $('alert').classList.toggle('info', !!info); $('alertBackup').style.display = info ? 'none' : ''; }
+function shareNotice(){
+  const when = EMBED && EMBED.sharedAt ? new Date(EMBED.sharedAt).toLocaleString('fr-FR', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) : '';
+  alertMsg(`<b>Version partagée${when ? ' le ' + when : ''}.</b> Vous pouvez consulter et filtrer les données. Les modifications faites ici ne sont pas enregistrées.`, true);
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let sb = null, signedInUser = null, memberRole = null, subscribed = null;
+let saving = false, pending = false, loadBusy = false, saveFailed = false;
+let authBusy = false, recoveryMode = /(?:^|[?#&])type=(?:invite|recovery)(?:&|$)/.test(location.href);
+let persisted = {opps:new Map(),tasks:new Map(),settings:JSON.stringify({seuil:15})}; // Map id -> { json, revision }
+let reloadTimer = null;
+
+const authMessage = (msg, cls='') => { const e=$('authMessage'); if(e){e.textContent=msg;e.className='auth-message '+cls;} };
+const appUrl = () => window.location.origin + window.location.pathname;
+const clone = obj => JSON.parse(JSON.stringify(obj));
+const normalizeState = x => ({settings:{seuil:15,...(x?.settings||{})},opps:Array.isArray(x?.opps)?x.opps:[],tasks:Array.isArray(x?.tasks)?x.tasks:[]});
+
+function commit(){
+  if (!S) return;
+  S.updatedAt = new Date().toISOString();
+  render();
+  if (fromShare){setSave('', 'Non enregistré (version partagée)');shareNotice();return;}
+  pending = true; saveFailed = false;
+  setSave('busy','Enregistrement dans Supabase…');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => flushChanges(), 400);
+}
+
+async function checked(request, label){
+  const {data,error} = await request;
+  if(error) throw new Error(label + ' : ' + error.message);
+  return data;
+}
+
+async function flushChanges(){
+  if(fromShare || saving || !pending || !sb || !signedInUser) return;
+  saving = true;
+  try {
+    while(pending){
+      pending = false;
+      const snap = clone(normalizeState(S));
+      const writeCollection = async (kind,table) => {
+        const rows = snap[kind];
+        const ref = persisted[kind];
+        const ids = new Set(rows.map(x => x.id));
+        const changed = rows.filter(x => !ref.has(x.id) || ref.get(x.id).json !== JSON.stringify(x));
+        const gone = [...ref.keys()].filter(id => !ids.has(id));
+
+        // Un enregistrement distinct par fiche. Le numéro de version protège les
+        // modifications concurrentes d'une même fiche : jamais de remplacement silencieux.
+        const fresh = changed.filter(x => !ref.has(x.id));
+        const existing = changed.filter(x => ref.has(x.id));
+        if(fresh.length){
+          const inserted=await checked(sb.from(table)
+            .insert(fresh.map(x=>({id:x.id,payload:x})))
+            .select('id,revision'),'Création '+kind);
+          const revisions=new Map((inserted||[]).map(row=>[row.id,row.revision]));
+          if(revisions.size!==fresh.length) throw new Error('Création incomplète ; actualisez après avoir sauvegardé une copie.');
+          fresh.forEach(x=>ref.set(x.id,{json:JSON.stringify(x),revision:revisions.get(x.id)}));
+        }
+        for (const x of existing){
+          const previous=ref.get(x.id);
+          const updated=await checked(sb.from(table)
+            .update({payload:x})
+            .eq('id',x.id).eq('revision',previous.revision)
+            .select('id,revision').maybeSingle(),'Modification '+kind);
+          if(!updated) throw new Error('Conflit de modification sur une fiche. Un autre membre l’a modifiée ou supprimée. Exportez votre sauvegarde puis rechargez la page pour comparer.');
+          ref.set(x.id,{json:JSON.stringify(x),revision:updated.revision});
+        }
+        for (const id of gone){
+          const previous=ref.get(id);
+          const deleted=await checked(sb.from(table)
+            .delete().eq('id',id).eq('revision',previous.revision)
+            .select('id').maybeSingle(),'Suppression '+kind);
+          if(!deleted) throw new Error('Conflit : la fiche à supprimer a été modifiée ailleurs. Exportez une sauvegarde puis rechargez la page.');
+          ref.delete(id);
+        }
+      };
+      await writeCollection('opps','dashboard_opportunities');
+      await writeCollection('tasks','dashboard_tasks');
+      const settings = JSON.stringify(snap.settings);
+      if(settings !== persisted.settings){
+        await checked(sb.from('dashboard_settings').upsert({id:'main',payload:snap.settings},{onConflict:'id'}),'Réglages');
+        persisted.settings = settings;
+      }
+    }
+    saveFailed=false;
+    setSave('', 'Enregistré à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}));
+    alertMsg('');
+    queueRemoteRefresh();
+  } catch(e){
+    pending=true; saveFailed=true;
+    setSave('err','Enregistrement en échec');
+    alertMsg('<b>La synchronisation Supabase a échoué.</b> '+esc(e.message)+' Les données locales sont conservées dans cet onglet : exportez une sauvegarde avant de le fermer.');
+  } finally { saving=false; }
+}
+
+async function loadFromServer(){
+  if(!sb || !signedInUser || saving || pending) return;
+  if(loadBusy) return;
+  loadBusy = true;
+  try {
+    const [opps,tasks,settings] = await Promise.all([
+      checked(sb.from('dashboard_opportunities').select('id,payload,revision,updated_at').order('id'),'Lecture opportunités'),
+      checked(sb.from('dashboard_tasks').select('id,payload,revision,updated_at').order('id'),'Lecture tâches'),
+      checked(sb.from('dashboard_settings').select('id,payload,updated_at').eq('id','main').maybeSingle(),'Lecture réglages')
+    ]);
+    if(saving || pending) return;
+    S={settings:{seuil:15,...(settings?.payload||{})},opps:opps.map(x=>x.payload),tasks:tasks.map(x=>x.payload)};
+    const timestamps=[...opps,...tasks,...(settings?[settings]:[])].map(x=>x.updated_at).filter(Boolean);
+    S.updatedAt = timestamps.length ? timestamps.sort().at(-1) : null;
+    persisted={opps:new Map(opps.map(row=>[row.id,{json:JSON.stringify(row.payload),revision:row.revision}])),tasks:new Map(tasks.map(row=>[row.id,{json:JSON.stringify(row.payload),revision:row.revision}])),settings:JSON.stringify(S.settings)};
+    render();
+    setSave('',S.updatedAt?'Synchronisé · '+new Date(S.updatedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'Prêt · Aucune donnée');
+    alertMsg('');
+  } finally {loadBusy=false;}
+}
+
+function queueRemoteRefresh(){
+  if(fromShare || !signedInUser || saveFailed) return;
+  clearTimeout(reloadTimer);
+  reloadTimer=setTimeout(async()=>{
+    if(saving || pending || loadBusy){queueRemoteRefresh();return;}
+    try{await loadFromServer();}catch(e){setSave('err','Synchronisation interrompue');alertMsg('<b>Actualisation impossible.</b> '+esc(e.message));}
+  },1000);
+}
+
+function listenRealtime(){
+  if(subscribed || !sb || fromShare) return;
+  let ch=sb.channel('fy27-updates');
+  ['dashboard_opportunities','dashboard_tasks','dashboard_settings'].forEach(table=>{
+    ch=ch.on('postgres_changes',{event:'*',schema:'public',table},()=>queueRemoteRefresh());
+  });
+  subscribed=ch.subscribe(status=>{
+    if(status==='SUBSCRIBED') queueRemoteRefresh();
+  });
+}
+
+function showLogin(msg){
+  document.body.classList.add('auth-gated');
+  $('authGate').style.display='grid';
+  if(msg) authMessage(msg,'error');
+}
+
+async function logout(){
+  clearTimeout(saveTimer);
+  if(pending){await flushChanges();if(pending){toast('Exportez une sauvegarde avant de vous déconnecter');return;}}
+  const {error}=await sb.auth.signOut();
+  if(error) toast(error.message);
+}
+
+async function handleSession(session){
+  if(fromShare || authBusy) return;
+  if(!session?.user){
+    signedInUser=null;memberRole=null;ME='';S=null;
+    if(subscribed && sb){await sb.removeChannel(subscribed);subscribed=null;}
+    showLogin();return;
+  }
+  if(signedInUser?.id===session.user.id && S) { if(recoveryMode){recoveryMode=false;setTimeout(()=>openAccess(true),100);} return; }
+  authBusy=true;
+  authMessage('Vérification des autorisations…');
+  try{
+    const {data:member,error}=await sb.from('app_members').select('role,active,display_name').eq('user_id',session.user.id).maybeSingle();
+    if(error) throw error;
+    if(!member || !member.active){
+      await sb.auth.signOut();
+      throw new Error("Ce compte n'est pas autorisé. Demandez une invitation à l’administrateur.");
+    }
+    signedInUser=session.user;memberRole=member.role; ME=member.display_name?.trim() || session.user.email?.split('@')[0] || '';
+    await loadFromServer();
+    document.body.classList.remove('auth-gated');
+    $('authGate').style.display='none';
+    $('btnAccess').textContent='Gestion des accès';
+    listenRealtime();
+    if(recoveryMode){recoveryMode=false;setTimeout(()=>openAccess(true),100);}
+  }catch(e){signedInUser=null;showLogin(e.message||'Connexion impossible');}
+  finally{authBusy=false;}
+}
+
+async function load(){
+  if(fromShare){
+    S=normalizeState(clone(EMBED));
+    S.updatedAt=EMBED.updatedAt;
+    document.body.classList.remove('auth-gated');
+    render();setSave('', 'Version partagée');shareNotice();return;
+  }
+  const url=window.DASH_SUPABASE_URL;
+  const key=window.DASH_SUPABASE_PUBLISHABLE_KEY;
+  if(!url || !/^https:\/\/[^\s]+\.supabase\.co\/?$/.test(url) || !key || key.includes('VOTRE_')){
+    showLogin('Configuration nécessaire : renseignez URL et clé publishable Supabase dans index.html.');return;
+  }
+  if(!window.supabase?.createClient){showLogin('La bibliothèque Supabase ne s’est pas chargée. Vérifiez votre connexion Internet.');return;}
+  sb=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  sb.auth.onAuthStateChange((event, session)=>{
+    if(event==='PASSWORD_RECOVERY') recoveryMode=true;
+    if(event==='SIGNED_IN' || event==='SIGNED_OUT' || event==='INITIAL_SESSION' || event==='PASSWORD_RECOVERY'){
+      setTimeout(()=>handleSession(session),0);
+    }
+  });
+  const {data,error}=await sb.auth.getSession();
+  if(error) showLogin(error.message);
+  else await handleSession(data.session);
+}
+
+async function openAccess(promptPassword=false){
+  if(!signedInUser || !sb) return;
+  const d=$('dlgAccess');
+  d.innerHTML=`<div class="dlg-head"><h3>Gestion des accès</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+  <div class="dlg-body">
+    <div class="access-card"><h4>Mon compte</h4><p>${esc(signedInUser.email||'')} · ${memberRole==='admin'?'Administrateur':'Membre'}</p>
+      <div class="field"><label class="lbl" for="ac_pwd">Nouveau mot de passe</label><input id="ac_pwd" type="password" autocomplete="new-password" minlength="8" placeholder="Au moins 8 caractères"></div>
+      <div class="field" style="margin-top:10px"><label class="lbl" for="ac_pwd2">Confirmer le mot de passe</label><input id="ac_pwd2" type="password" autocomplete="new-password" minlength="8" placeholder="Répéter le mot de passe"></div>
+      <div class="access-actions"><button class="btn primary" type="button" id="ac_change_pwd">${promptPassword?'Définir mon mot de passe':'Modifier mon mot de passe'}</button></div>
+    </div>
+    ${memberRole==='admin'?`<div class="access-card"><h4>Ajouter un membre</h4><p>L'administrateur envoie une invitation ; le membre choisit ensuite son propre mot de passe.</p>
+      <div class="field"><label class="lbl" for="ac_name">Nom et prénom (identique au nom dans les tâches)</label><input id="ac_name" type="text" maxlength="120" autocomplete="off" placeholder="Prénom Nom"></div>
+      <div class="access-grid" style="margin-top:10px"><div class="field"><label class="lbl" for="ac_email">Adresse email du membre</label><input id="ac_email" type="email" autocomplete="off" placeholder="prenom.nom@entreprise.com"></div><button class="btn primary" type="button" id="ac_invite">Envoyer l’invitation</button></div>
+    </div>`:''}
+    <div class="access-card"><h4>${memberRole==='admin'?'Membres autorisés':'Mon accès'}</h4><ul id="ac_members" class="access-list"><li>Chargement…</li></ul></div>
+  </div><div class="dlg-foot"><span class="help">Les accès sont protégés par les règles de sécurité Supabase.</span><div class="right"><button class="btn" type="button" data-close>Fermer</button></div></div>`;
+  d.showModal();
+  const fillMembers=async()=>{
+    const {data,error}=await sb.from('app_members').select('user_id,email,display_name,role,active,created_at').order('created_at',{ascending:true});
+    const box=$('ac_members');if(!box)return;
+    if(error){box.innerHTML='<li>'+esc(error.message)+'</li>';return;}
+    box.innerHTML=(data||[]).length?(data||[]).map(m=>`<li><span>${esc(m.display_name||m.email)} · ${esc(m.email)}${m.user_id===signedInUser.id?' (moi)':''}</span><span class="access-pill">${m.role==='admin'?'Administrateur':'Membre'}${!m.active?' · désactivé':''}</span></li>`).join(''):'<li>Aucun membre trouvé</li>';
+  };
+  await fillMembers();
+  $('ac_change_pwd').onclick=async()=>{
+    const p=$('ac_pwd').value, p2=$('ac_pwd2').value;
+    if(p.length<8){toast('Le mot de passe doit contenir au moins 8 caractères');return;}
+    if(p!==p2){toast('Les deux mots de passe ne correspondent pas');return;}
+    const btn=$('ac_change_pwd');btn.disabled=true;
+    const {error}=await sb.auth.updateUser({password:p});
+    btn.disabled=false;
+    if(error){toast(error.message);return;}
+    $('ac_pwd').value='';$('ac_pwd2').value='';toast('Mot de passe modifié');
+    if(promptPassword){d.close();}
+  };
+  if(memberRole==='admin') $('ac_invite').onclick=async()=>{
+    const email=$('ac_email').value.trim().toLowerCase();
+    const name=$('ac_name').value.trim();
+    if(!name || name.length>120){toast('Indiquez le nom et prénom du membre');return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Adresse email invalide');return;}
+    const btn=$('ac_invite');btn.disabled=true;btn.textContent='Envoi…';
+    try{
+      const {data,error}=await sb.functions.invoke('invite-member',{body:{email,name}});
+      if(error){
+        let msg=error.message;
+        try{const detail=await error.context?.json();if(detail?.error)msg=detail.error;}catch(_){}
+        throw new Error(msg);
+      }
+      if(data?.error) throw new Error(data.error);
+      $('ac_email').value='';$('ac_name').value='';toast('Invitation envoyée à '+email);await fillMembers();
+    }catch(e){toast('Invitation impossible : '+e.message);}
+    finally{btn.disabled=false;btn.textContent='Envoyer l’invitation';}
+  };
+  if(promptPassword) $('ac_pwd').focus();
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!sb)return;
+  const email=$('loginEmail').value.trim(),password=$('loginPassword').value;
+  const btn=$('loginButton');btn.disabled=true;
+  authMessage('Connexion en cours…');
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  btn.disabled=false;
+  if(error) authMessage('Identifiants non valides ou compte non activé.','error');
+  else{$('loginPassword').value='';authMessage('Connexion validée. Chargement…','ok');}
+});
+$('btnForgotPassword').onclick=async()=>{
+  if(!sb) return;
+  const email=$('loginEmail').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){authMessage('Renseignez votre adresse email.','error');return;}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:appUrl()});
+  authMessage(error?'Impossible d’envoyer le lien : '+error.message:'Si ce compte existe, un email de réinitialisation a été envoyé.',error?'error':'ok');
+};
+$('btnAccess').onclick=()=>openAccess();
+$('btnLogout').onclick=logout;
+window.addEventListener('online',queueRemoteRefresh);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)queueRemoteRefresh();});
+
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2200); }
+
+/* ---------- Fiche opportunité ---------- */
+function readFields(root){
+  const out = {};
+  root.querySelectorAll('[name]').forEach(el => { out[el.name] = el.type === 'checkbox' ? el.checked : el.value; });
+  return out;
+}
+let editingOpp = null;
+function openOpp(id){
+  const isNew = !id;
+  const o = isNew ? {id:uid('o'), sujet:'', statut:STATUTS[0], type:'Besoin client', details:'', contacts:'', lead:ME, acn:'', montant:'', dateEcrit:'', dateOral:'', dateDecision:'', attente:false} : {...oppById(id)};
+  editingOpp = {o, isNew};
+  const autoWait = WAIT.includes(o.statut);
+  const d = $('dlgOpp');
+  d.innerHTML = `<div id="fOpp">
+    <div class="dlg-head"><h3>${isNew ? 'Nouvelle opportunité' : esc(o.sujet)}</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body">
+      <div class="field full"><label class="lbl" for="f_sujet">Sujet</label><input id="f_sujet" name="sujet" value="${esc(o.sujet)}" required placeholder="Ex. Migration data platform"></div>
+      <div class="field"><label class="lbl" for="f_statut">Statut</label><select id="f_statut" name="statut" class="${o.statut === URGENCE ? 'is-urgence' : ''}">${STATUTS.map(s => `<option ${s === o.statut ? 'selected' : ''} ${s === URGENCE ? 'style="color:#D9432B;font-weight:700"' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label class="lbl" for="f_type">Origine</label><select id="f_type" name="type">${['Proactive','Besoin client'].map(s => `<option ${s === o.type ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label class="lbl" for="f_lead">Lead local</label><input id="f_lead" name="lead" list="people" value="${esc(o.lead)}"></div>
+      <div class="field"><label class="lbl" for="f_montant">Montant estimé</label><input id="f_montant" name="montant" value="${esc(o.montant)}" placeholder="Ex. 500 k€"></div>
+      <div class="field"><label class="lbl" for="f_contacts">Contacts Michelin</label><textarea id="f_contacts" name="contacts" placeholder="Un contact par ligne">${esc(o.contacts)}</textarea></div>
+      <div class="field"><label class="lbl" for="f_acn">Contacts Accenture et éditeurs</label><textarea id="f_acn" name="acn" placeholder="Un contact par ligne">${esc(o.acn)}</textarea></div>
+      <div class="field full"><label class="lbl" for="f_details">Détails et besoin client</label><textarea id="f_details" name="details">${esc(o.details)}</textarea></div>
+      <div class="field"><label class="lbl" for="f_de">Soumission de l'écrit</label><input type="date" id="f_de" name="dateEcrit" value="${esc(o.dateEcrit)}"></div>
+      <div class="field"><label class="lbl" for="f_do">Oral</label><input type="date" id="f_do" name="dateOral" value="${esc(o.dateOral)}"></div>
+      <div class="field"><label class="lbl" for="f_dd">Décision client</label><input type="date" id="f_dd" name="dateDecision" value="${esc(o.dateDecision)}"></div>
+      <div class="field" style="justify-content:flex-end">
+        <label class="check-line"><input type="checkbox" name="attente" id="f_attente" ${o.attente || autoWait ? 'checked' : ''} ${autoWait ? 'disabled' : ''}><span>En attente de décision client<br><span class="help" id="f_attente_help">${autoWait ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.'}</span></span></label>
+      </div>
+      <div class="sublist" id="oppTasks"></div>
+    </div>
+    <div class="dlg-foot">
+      <div>${isNew ? '' : `<button type="button" class="btn danger" id="delOpp">Supprimer l'opportunité</button>`}</div>
+      <div class="right"><button type="button" class="btn quiet" data-close>Annuler</button><button type="button" class="btn primary" id="saveOpp">${isNew ? "Créer l'opportunité" : 'Enregistrer'}</button></div>
+    </div>
+  </div>`;
+  renderOppTasks();
+  d.showModal();
+  if (isNew) $('f_sujet').focus();
+
+  $('f_statut').onchange = e => {
+    e.target.classList.toggle('is-urgence', e.target.value === URGENCE);
+    const auto = WAIT.includes(e.target.value), cb = $('f_attente');
+    cb.disabled = auto; if (auto) cb.checked = true; else cb.checked = !!editingOpp.o.attente;
+    $('f_attente_help').textContent = auto ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.';
+  };
+  $('saveOpp').onclick = () => {
+    const f = readFields($('fOpp'));
+    const sujet = String(f.sujet || '').trim();
+    if (!sujet){ $('f_sujet').focus(); toast('Indiquez un sujet'); return; }
+    const data = {...o, sujet};
+    ['statut','type','lead','montant','contacts','acn','details','dateEcrit','dateOral','dateDecision'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    const cb = $('f_attente'); data.attente = cb.disabled ? !!o.attente : cb.checked;
+    if (isNew) S.opps.push(data); else S.opps[S.opps.findIndex(x => x.id === data.id)] = data;
+    d.close(); commit(); toast(isNew ? 'Opportunité créée' : 'Opportunité enregistrée');
+  };
+  const del = $('delOpp');
+  if (del) del.onclick = () => {
+    if (!del.classList.contains('armed')){ del.classList.add('armed'); del.textContent = 'Confirmer la suppression'; return; }
+    S.opps = S.opps.filter(x => x.id !== o.id); S.tasks = S.tasks.filter(t => t.oppId !== o.id);
+    d.close(); commit(); toast('Opportunité supprimée');
+  };
+}
+function renderOppTasks(){
+  const box = $('oppTasks'); if (!box || !editingOpp) return;
+  if (editingOpp.isNew){ box.innerHTML = `<p class="help">Créez la fiche pour lui ajouter des tâches.</p>`; return; }
+  const list = S.tasks.filter(t => t.oppId === editingOpp.o.id).sort(sortTasks);
+  box.innerHTML = `<div class="sublist-head"><b>Tâches de cette opportunité</b><button type="button" class="btn" data-new-task-for="${editingOpp.o.id}">Ajouter une tâche</button></div>` +
+    (list.length ? list.map(t => taskRow(t, true)).join('') : `<p class="help">Aucune tâche. Ajoutez la prochaine action et son porteur.</p>`);
+}
+
+/* ---------- Fiche tâche ---------- */
+function openTask(id, oppId){
+  const isNew = !id;
+  const t = isNew ? {id:uid('t'), oppId: oppId || (S.opps[0] && S.opps[0].id) || '', titre:'', owner:'', due:'', state:'À lancer'} : {...S.tasks.find(x => x.id === id)};
+  if (!S.opps.length){ toast("Créez d'abord une opportunité"); return; }
+  const d = $('dlgTask');
+  const opts = [...S.opps].sort((a,b) => a.sujet.localeCompare(b.sujet,'fr')).map(o => `<option value="${o.id}" ${o.id === t.oppId ? 'selected' : ''}>${esc(o.sujet)}</option>`).join('');
+  d.innerHTML = `<div id="fTask">
+    <div class="dlg-head"><h3>${isNew ? 'Nouvelle tâche' : 'Modifier la tâche'}</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body">
+      <div class="field full"><label class="lbl" for="t_titre">Action à mener</label><textarea id="t_titre" name="titre" required placeholder="Ex. Relancer le client sur le planning">${esc(t.titre)}</textarea></div>
+      <div class="field full"><label class="lbl" for="t_opp">Opportunité</label><select id="t_opp" name="oppId">${opts}</select></div>
+      <div class="field"><label class="lbl" for="t_owner">Porteur</label><input id="t_owner" name="owner" list="people" value="${esc(t.owner)}" placeholder="Nom, ou plusieurs séparés par une virgule"></div>
+      <div class="field"><label class="lbl" for="t_due">Échéance</label><input type="date" id="t_due" name="due" value="${esc(t.due)}"></div>
+      <div class="field"><label class="lbl" for="t_state">État</label><select id="t_state" name="state">${STATES.map(s => `<option ${s === t.state ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+    </div>
+    <div class="dlg-foot">
+      <div>${isNew ? '' : `<button type="button" class="btn danger" id="delTask">Supprimer la tâche</button>`}</div>
+      <div class="right"><button type="button" class="btn quiet" data-close>Annuler</button><button type="button" class="btn primary" id="saveTask">${isNew ? 'Ajouter la tâche' : 'Enregistrer'}</button></div>
+    </div>
+  </div>`;
+  d.showModal();
+  if (isNew) $('t_titre').focus();
+  $('saveTask').onclick = () => {
+    const f = readFields($('fTask'));
+    const titre = String(f.titre || '').trim(); if (!titre){ $('t_titre').focus(); toast("Décrivez l'action à mener"); return; }
+    const data = {...t, titre, oppId:String(f.oppId), owner:String(f.owner || '').trim(), due:String(f.due || ''), state:String(f.state)};
+    if (isNew) S.tasks.push(data); else S.tasks[S.tasks.findIndex(x => x.id === data.id)] = data;
+    d.close(); commit(); renderOppTasks(); toast(isNew ? 'Tâche ajoutée' : 'Tâche enregistrée');
+  };
+  const del = $('delTask');
+  if (del) del.onclick = () => {
+    if (!del.classList.contains('armed')){ del.classList.add('armed'); del.textContent = 'Confirmer la suppression'; return; }
+    S.tasks = S.tasks.filter(x => x.id !== t.id); d.close(); commit(); renderOppTasks(); toast('Tâche supprimée');
+  };
+}
+
+/* ---------- Slide hebdo ---------- */
+const PROPOSAL = ['Lancer la rédaction','Ecrit en cours','Oral en préparation'];
+function parseMontant(txt){
+  const t = String(txt || '').replace(/(\d)[\s\u00a0]+(?=\d{3}\b)/g, '$1');
+  const m = t.match(/(\d+(?:[.,]\d+)?)(?:\s*(?:à|a|-|–)\s*(\d+(?:[.,]\d+)?))?\s*(k|K|M)?\s*€/);
+  if (!m) return null;
+  const mult = m[3] === 'M' ? 1e6 : (m[3] === 'k' || m[3] === 'K') ? 1e3 : 1;
+  const lo = parseFloat(m[1].replace(',', '.')) * mult;
+  const hi = m[2] ? parseFloat(m[2].replace(',', '.')) * mult : lo;
+  return lo > 0 ? {lo, hi} : null;
+}
+function fmtEuro(v){
+  if (v >= 1e6) return (Math.round(v / 1e5) / 10).toLocaleString('fr-FR') + ' M€';
+  if (v >= 1e3) return Math.round(v / 1e3).toLocaleString('fr-FR') + ' k€';
+  return Math.round(v).toLocaleString('fr-FR') + ' €';
+}
+function fmtRange(b){
+  if (!b || b.hi <= 0) return 'Non chiffré';
+  if (Math.abs(b.hi - b.lo) < 1) return fmtEuro(b.lo);
+  if (b.lo >= 1e6 && b.hi >= 1e6) return fmtEuro(b.lo).replace(' M€', '') + ' à ' + fmtEuro(b.hi);
+  return fmtEuro(b.lo) + ' à ' + fmtEuro(b.hi);
+}
+function budgetOf(list){
+  let lo = 0, hi = 0, unpriced = 0;
+  list.forEach(o => { const m = parseMontant(o.montant); if (m){ lo += m.lo; hi += m.hi; } else unpriced++; });
+  return {lo, hi, unpriced};
+}
+function clientNames(list){
+  const set = new Map();
+  list.forEach(o => String(o.contacts || '').split('\n').forEach(line => {
+    if (/identifier|définir|nouvel|remplaçant/i.test(line)) return;
+    const name = line.replace(/\(.*?\)/g, '').replace(/:.*$/, '').trim();
+    if (name.length > 2) set.set(name.toLowerCase(), name);
+  }));
+  return [...set.values()];
+}
+function weeklyData(){
+  const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
+  const active = S.opps.filter(o => o.statut !== PERDU);
+  const lost = S.opps.length - active.length;
+  const side = isPro => {
+    const list = active.filter(o => (o.type === 'Proactive') === isPro);
+    const top = list.map(o => ({o, m: parseMontant(o.montant)})).filter(x => x.m)
+      .sort((a,b) => b.m.hi - a.m.hi || b.m.lo - a.m.lo).slice(0, 3);
+    return {list, n: list.length, budget: budgetOf(list), attente: list.filter(o => M.get(o.id).attente).length,
+            proposals: list.filter(o => PROPOSAL.includes(o.statut)).length, top};
+  };
+  const now = new Date();
+  const budget = budgetOf(active);
+  return {
+    dateLabel: `Semaine ${isoWeek(now)}, ${now.toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'})}`,
+    proposals: active.filter(o => PROPOSAL.includes(o.statut)).length,
+    attente: active.filter(o => M.get(o.id).attente).length,
+    budget, clients: clientNames(active).length, lost,
+    pro: side(true), client: side(false)
+  };
+}
+const pl = (n, one, many) => Number(n) > 1 ? many : one;
+const cut = (s, n) => s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s;
+function slideSpec(D){
+  const ink = '231C3A', muted = '6E6886', violet = '7428E8';
+  const E = [];
+  const T = (text, x, y, w, h, o = {}) => E.push({k:'t', text:String(text), x, y, w, h, size:o.size || 14, bold:!!o.bold, color:o.color || ink, align:o.align || 'left', valign:o.valign || 'top'});
+  const R = (x, y, w, h, fill) => E.push({k:'r', x, y, w, h, fill});
+  T('Point hebdo opportunités Michelin', 0.6, 0.4, 8.6, 0.75, {size:32, bold:true, valign:'middle'});
+  T(D.dateLabel, 8.9, 0.4, 3.83, 0.75, {size:14, color:muted, align:'right', valign:'middle'});
+  const unpriced = D.budget.unpriced;
+  const kpis = [
+    {n:D.proposals, l:pl(D.proposals, 'proposition en cours', 'propositions en cours'), c:'écrit ou oral en préparation', w:2.7, size:44},
+    {n:D.attente, l:pl(D.attente, 'décision attendue', 'décisions attendues'), c:'en attente de décision client', w:2.7, size:44},
+    {n:fmtRange(D.budget), l:'budget total estimé', c: unpriced ? `${unpriced} opportunité${unpriced > 1 ? 's' : ''} non chiffrée${unpriced > 1 ? 's' : ''}` : 'toutes les opportunités sont chiffrées', w:3.38, size:26},
+    {n:D.clients, l:pl(D.clients, 'client concerné', 'clients concernés'), c:'interlocuteurs Michelin', w:2.45, size:44}
+  ];
+  let x = 0.6;
+  kpis.forEach(k => {
+    R(x, 1.45, k.w, 1.7, 'F3F0FB');
+    T(k.n, x + 0.25, 1.55, k.w - 0.5, 0.85, {size:k.size, bold:true, color:violet, valign:'bottom'});
+    T(k.l, x + 0.25, 2.47, k.w - 0.5, 0.32, {size:14, bold:true});
+    T(k.c, x + 0.25, 2.77, k.w - 0.5, 0.28, {size:11, color:muted});
+    x += k.w + 0.3;
+  });
+  const cw = 5.915;
+  [[D.pro, 'Proactives', 'Initiées par Accenture', '0B8F70', 'E8F5F0', 0.6],
+   [D.client, 'Besoins client', 'Demandes exprimées par Michelin', '2F6BEA', 'EDF2FE', 0.6 + cw + 0.3]].forEach(([s, title, sub, col, tint, cx]) => {
+    R(cx, 3.45, cw, 3.35, tint);
+    T(title, cx + 0.3, 3.62, cw - 0.6, 0.45, {size:20, bold:true, color:col});
+    T(sub, cx + 0.3, 4.05, cw - 0.6, 0.3, {size:12, color:muted});
+    let sx = cx + 0.3;
+    [[s.n, pl(s.n, 'opportunité', 'opportunités'), 1.35], [fmtRange(s.budget), 'budget estimé', 2.5], [s.attente, pl(s.attente, 'décision attendue', 'décisions attendues'), 1.45]].forEach(([n, l, w]) => {
+      T(n, sx, 4.45, w, 0.5, {size:24, bold:true, valign:'bottom'});
+      T(l, sx, 4.96, w, 0.28, {size:12, color:muted});
+      sx += w;
+    });
+    T('Principales opportunités', cx + 0.3, 5.4, cw - 0.6, 0.3, {size:12, bold:true, color:muted});
+    if (!s.top.length) T("Aucune opportunité chiffrée pour l'instant", cx + 0.3, 5.72, cw - 0.6, 0.33, {size:14, color:muted});
+    s.top.forEach((t, i) => {
+      const y = 5.72 + i * 0.33;
+      T(cut(t.o.sujet, 32), cx + 0.3, y, 3.2, 0.33, {size:14, valign:'middle'});
+      T(fmtRange(t.m), cx + 3.5, y, cw - 3.8, 0.33, {size:14, bold:true, align:'right', valign:'middle'});
+    });
+  });
+  T(`Propositions en cours : statuts Lancer la rédaction, Écrit en cours, Oral en préparation. Budget : somme des fourchettes estimées, hors opportunités perdues${D.lost ? ` (${D.lost})` : ''}. Source : dashboard Opportunités FY27.`,
+    0.6, 6.95, 12.13, 0.3, {size:10, color:muted});
+  return E;
+}
+function slideNotes(D){
+  const line = o => `- ${o.sujet} : ${o.statut}${o.montant ? ', ' + o.montant : ''}`;
+  return `Proactives (${D.pro.n})\n${D.pro.list.map(line).join('\n')}\n\nBesoins client (${D.client.n})\n${D.client.list.map(line).join('\n')}`;
+}
+function slideHtml(E){
+  const pct = (v, total) => (v / total * 100).toFixed(3) + '%';
+  return E.map(e => {
+    const pos = `left:${pct(e.x, 13.333)};top:${pct(e.y, 7.5)};width:${pct(e.w, 13.333)};height:${pct(e.h, 7.5)};`;
+    if (e.k === 'r') return `<div class="s-rect" style="${pos}background:#${e.fill}"></div>`;
+    const v = {top:'flex-start', middle:'center', bottom:'flex-end'}[e.valign];
+    return `<div class="s-text" style="${pos}font-size:${(e.size * 0.10417).toFixed(3)}cqw;font-weight:${e.bold ? 700 : 400};color:#${e.color};text-align:${e.align};justify-content:${v}"><span>${esc(e.text)}</span></div>`;
+  }).join('');
+}
+function loadPptx(){
+  if (window.PptxGenJS) return Promise.resolve(window.PptxGenJS);
+  const urls = ['https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js', 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js'];
+  return urls.reduce((p, url) => p.catch(() => new Promise((res, rej) => {
+    const el = document.createElement('script'); el.src = url;
+    el.onload = () => window.PptxGenJS ? res(window.PptxGenJS) : rej(new Error('lib'));
+    el.onerror = () => rej(new Error('load'));
+    document.head.appendChild(el);
+  })), Promise.reject(new Error('start')));
+}
+async function buildPptxBlob(D){
+  const P = await loadPptx();
+  const pres = new P();
+  pres.layout = 'LAYOUT_WIDE';
+  pres.title = 'Point hebdo opportunités Michelin';
+  pres.theme = {headFontFace:'Calibri', bodyFontFace:'Calibri'};
+  const slide = pres.addSlide();
+  slide.background = {color:'FFFFFF'};
+  const rr = (pres.shapes && pres.shapes.ROUNDED_RECTANGLE) || 'roundRect';
+  slideSpec(D).forEach((e, i) => {
+    if (e.k === 'r') slide.addShape(rr, {x:e.x, y:e.y, w:e.w, h:e.h, fill:{color:e.fill}, line:{color:e.fill, width:0.5}, rectRadius:0.12, objectName:'Bloc ' + (i + 1)});
+    else slide.addText(e.text, {x:e.x, y:e.y, w:e.w, h:e.h, fontFace:'Calibri', fontSize:e.size, bold:e.bold, color:e.color, align:e.align, valign:e.valign, margin:0, isTextBox:true, fit:'none', objectName:'Texte ' + (i + 1)});
+  });
+  slide.addNotes(slideNotes(D));
+  return pres.write({outputType:'blob'});
+}
+function openSlide(){
+  const D = weeklyData();
+  const d = $('dlgSlide');
+  d.innerHTML = `<div class="dlg-head"><h3>Slide hebdo</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body" style="display:block">
+      <p class="help" style="margin:0 0 12px">Calculé à partir de vos données du jour. La liste complète des opportunités est dans les notes du PowerPoint.</p>
+      <div class="slide-frame"><div class="slide">${slideHtml(slideSpec(D))}</div></div>
+    </div>
+    <div class="dlg-foot"><div></div><div class="right"><button type="button" class="btn quiet" data-close>Fermer</button><button type="button" class="btn primary" id="sl_pptx">Télécharger le PowerPoint</button></div></div>`;
+  d.showModal();
+  $('sl_pptx').onclick = async () => {
+    const b = $('sl_pptx'); b.disabled = true; b.textContent = 'Préparation…';
+    try { const blob = await buildPptxBlob(D); download(`slide_hebdo_opportunites_${stamp()}.pptx`, blob, 'application/vnd.openxmlformats-officedocument.presentationml.presentation'); }
+    catch(e){ toast("Le PowerPoint n'a pas pu être créé ici. Vérifiez votre connexion Internet."); }
+    b.disabled = false; b.textContent = 'Télécharger le PowerPoint';
+  };
+}
+
+/* ---------- Version à partager ---------- */
+
+function buildShareFile(){
+  const T = x => String.fromCharCode(60) + x + String.fromCharCode(62);
+  const styleEl = [...document.querySelectorAll('style')].find(el => el.textContent.includes('--k-attente'));
+  const scriptEl = [...document.scripts].find(el => el.textContent.includes('opportunites-fy27-dashboard'));
+  if (!styleEl || !scriptEl || !PRISTINE) throw new Error('page incomplète');
+  const data = JSON.stringify({...S, sharedAt:new Date().toISOString()}).replace(/[<>]/g, c => c === String.fromCharCode(60) ? '\\u003c' : '\\u003e');
+  return T('!DOCTYPE html') + '\n' + T('html lang="fr"') + T('head') + T('meta charset="utf-8"')
+    + T('meta name="viewport" content="width=device-width, initial-scale=1"') + T('title') + 'Opportunités FY27' + T('/title')
+    + T('style') + styleEl.textContent + T('/style') + T('/head') + T('body class="share-mode"') + '\n' + PRISTINE + '\n'
+    + T('script') + 'window.__DASH_DATA__ = ' + data + ';' + T('/script') + '\n'
+    + T('script') + scriptEl.textContent + T('/script') + '\n' + T('/body') + T('/html') + '\n';
+}
+function shareFile(){
+  if(!window.confirm('Le fichier téléchargé contiendra toutes les données commerciales en clair. Le partager uniquement avec des personnes autorisées. Continuer ?')) return;
+  let html;
+  try { html = buildShareFile(); } catch(e){ toast("Impossible de préparer le fichier à partager"); return; }
+  download(`dashboard_opportunites_${stamp()}.html`, html, 'text/html;charset=utf-8'); }
+
+/* ---------- Synthèse par personne ---------- */
+function synthData(person){
+  const mine = S.tasks.filter(t => t.state !== 'Fait' && splitPeople(t.owner).includes(person))
+    .filter(t => { const o = oppById(t.oppId); return !o || o.statut !== PERDU; })
+    .sort(sortTasks);
+  const late = [], dated = [], doing = [], todo = [];
+  mine.forEach(t => {
+    if (t.due && diff(t.due) < 0) late.push(t);
+    else if (t.due) dated.push(t);
+    else if (t.state === 'En cours') doing.push(t);
+    else todo.push(t);
+  });
+  return {mine, late, dated, doing, todo};
+}
+function synthText(person){
+  const {mine, late, dated, doing, todo} = synthData(person);
+  const date = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+  if (!mine.length) return `Actions de ${person} au ${date}\n\nAucune action ouverte.`;
+  const line = t => {
+    const o = oppById(t.oppId);
+    const others = splitPeople(t.owner).filter(p => p !== person);
+    const extra = [];
+    if (t.due) extra.push((diff(t.due) < 0 ? 'échéance dépassée : ' : 'pour le ') + fmt(t.due));
+    if (others.length) extra.push('avec ' + others.join(', '));
+    if (t.state === 'En cours' && t.due) extra.push('en cours');
+    return `- ${o ? o.sujet : 'Sans opportunité'} : ${t.titre}${extra.length ? ' (' + extra.join(', ') + ')' : ''}`;
+  };
+  const block = (title, list) => list.length ? `\n${title} (${list.length})\n${list.map(line).join('\n')}\n` : '';
+  return `Actions de ${person} au ${date} : ${mine.length} action${mine.length > 1 ? 's' : ''} ouverte${mine.length > 1 ? 's' : ''}\n`
+    + block('En retard', late) + block('Avec une échéance', dated) + block('En cours', doing) + block('À lancer', todo);
+}
+function openSynth(person){
+  const owners = [...new Set(S.tasks.flatMap(t => splitPeople(t.owner)))].sort((a,b) => a === ME ? -1 : b === ME ? 1 : a.localeCompare(b,'fr'));
+  if (!owners.length){ toast('Aucune tâche assignée pour le moment'); return; }
+  let current = person && owners.includes(person) ? person : (owners.includes(ME) ? ME : owners[0]);
+  const d = $('dlgSynth');
+  d.innerHTML = `<div class="dlg-head"><h3>Synthèse par personne</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body">
+      <div class="field full"><label class="lbl" for="sy_person">Personne</label><select id="sy_person">${owners.map(p => `<option value="${esc(p)}" ${p === current ? 'selected' : ''}>${esc(p)}${p === ME ? ' (moi)' : ''}</option>`).join('')}</select></div>
+      <div class="field full synth-stats" id="sy_stats"></div>
+      <div class="field full"><label class="lbl" for="sy_text">Texte prêt à copier dans un mail ou un message</label><textarea id="sy_text" class="synth" readonly></textarea></div>
+    </div>
+    <div class="dlg-foot"><div></div><div class="right"><button type="button" class="btn quiet" data-close>Fermer</button><button type="button" class="btn primary" id="sy_copy">Copier la synthèse</button></div></div>`;
+  const fill = () => {
+    const {mine, late, dated, doing, todo} = synthData(current);
+    $('sy_stats').innerHTML = `<span><b>${mine.length}</b>ouvertes</span><span class="late"><b>${late.length}</b>en retard</span><span><b>${dated.length}</b>avec échéance</span><span><b>${doing.length}</b>en cours</span><span><b>${todo.length}</b>à lancer</span>`;
+    $('sy_text').value = synthText(current);
+  };
+  fill();
+  $('sy_person').onchange = e => { current = e.target.value; fill(); };
+  $('sy_copy').onclick = async () => {
+    const ta = $('sy_text'); let ok = false;
+    try { await navigator.clipboard.writeText(ta.value); ok = true; } catch(e){}
+    if (!ok){ try { ta.focus(); ta.select(); ok = document.execCommand('copy'); } catch(e){} }
+    toast(ok ? 'Synthèse copiée' : 'Sélectionnez le texte puis copiez-le (Ctrl+C)');
+  };
+  d.showModal();
+}
+
+/* ---------- Réglages et export ---------- */
+function download(name, content, type){
+  try {
+    const url = URL.createObjectURL(new Blob([content], {type}));
+    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000); toast('Fichier téléchargé');
+  } catch(e){ toast("Le téléchargement est bloqué ici"); }
+}
+const stamp = () => new Date().toISOString().slice(0,10);
+function csvTasks(){
+  const q = v => '"' + String(v ?? '').replace(/"/g,'""').replace(/\n/g,' ') + '"';
+  const rows = [['Opportunité','Statut opportunité','Tâche','Porteur','Échéance','État']];
+  [...S.tasks].sort(sortTasks).forEach(t => { const o = oppById(t.oppId) || {}; rows.push([o.sujet, o.statut, t.titre, t.owner || 'Sans porteur', t.due ? new Date(t.due + 'T00:00:00').toLocaleDateString('fr-FR') : '', t.state]); });
+  return '\ufeff' + rows.map(r => r.map(q).join(';')).join('\r\n');
+}
+function openSettings(){
+  const d = $('dlgSet');
+  d.innerHTML = `<div class="dlg-head"><h3>Réglages et export</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body">
+      <div class="set-row"><div><b>Télécharger pour partager</b><p>Fichier du dashboard avec vos données à jour, à envoyer à votre manager.</p></div><button class="btn" id="s_share">Télécharger</button></div>
+      <div class="set-row"><div><b>Imprimer ou enregistrer en PDF</b><p>Pour envoyer le point hebdo à votre manager.</p></div><button class="btn" id="s_print">Imprimer</button></div>
+      <div class="set-row"><div><b>Exporter les tâches</b><p>Fichier CSV qui s'ouvre directement dans Excel.</p></div><button class="btn" id="s_csv">Exporter en CSV</button></div>
+      <div class="set-row"><div><b>Sauvegarder toutes les données</b><p>Fichier de sauvegarde à garder ou à partager.</p></div><button class="btn" id="s_json">Exporter la sauvegarde</button></div>
+      <div class="set-row"><div><b>Restaurer une sauvegarde</b><p>Remplace les données actuelles par celles du fichier.</p></div><button class="btn" id="s_import">Importer</button></div>
+      <div class="set-row"><div><b>Revenir au fichier d'origine</b><p>Restaure pour tous la version de référence mémorisée lors du premier import.</p></div><button class="btn danger" id="s_reset">Réinitialiser</button></div>
+    </div>`;
+  d.showModal();
+  $('s_share').onclick = shareFile;
+  $('s_print').onclick = () => { d.close(); setTimeout(() => window.print(), 150); };
+  $('s_csv').onclick = () => download(`taches_opportunites_${stamp()}.csv`, csvTasks(), 'text/csv;charset=utf-8');
+  $('s_json').onclick = () => download(`sauvegarde_opportunites_${stamp()}.json`, JSON.stringify(S, null, 2), 'application/json');
+  $('s_import').onclick = () => $('fileImport').click();
+  const r = $('s_reset');
+  r.onclick = async () => {
+    if (!r.classList.contains('armed')){r.classList.add('armed');r.textContent='Confirmer la réinitialisation pour tous';return;}
+    r.disabled=true;
+    try{
+      let baseline=null;
+      if(fromShare) baseline=clone(SEED);
+      else{
+        const {data,error}=await sb.from('dashboard_baseline').select('payload').eq('id','initial').maybeSingle();
+        if(error) throw error;
+        if(!data) throw new Error('Aucune version initiale. Importez votre sauvegarde initiale en tant qu’administrateur.');
+        baseline=data.payload;
+      }
+      S=normalizeState(clone(baseline));ui.kpi=null;ui.person='';d.close();commit();toast('Retour à la version initiale — synchronisation en cours');
+    }catch(e){toast(e.message);}finally{r.disabled=false;}
+  };
+}
+$('fileImport').onchange = e => {
+  const file = e.target.files[0]; if (!file) return;
+  const rd = new FileReader();
+  rd.onload = async () => {
+    try {
+      const data = JSON.parse(rd.result);
+      if (!Array.isArray(data.opps) || !Array.isArray(data.tasks)) throw new Error('Structure invalide');
+      const incoming=normalizeState(data);
+      if(!fromShare && !signedInUser) throw new Error('Connexion nécessaire');
+      if(!fromShare && memberRole==='admin'){
+        const {data:base,error:baseErr}=await sb.from('dashboard_baseline').select('id').eq('id','initial').maybeSingle();
+        if(baseErr) throw baseErr;
+        if(!base){
+          const {error:writeErr}=await sb.from('dashboard_baseline').insert({id:'initial',payload:incoming});
+          if(writeErr && writeErr.code!=='23505') throw writeErr;
+        }
+      }
+      S=incoming;ui.kpi=null;ui.person='';$('dlgSet').close();commit();toast('Sauvegarde importée — synchronisation en cours');
+    }catch(err){toast('Import impossible : '+err.message);}
+    e.target.value='';
+  };
+  rd.readAsText(file);
+};
+
+/* ---------- Interactions ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-tab],[data-kpi],[data-clear],[data-group],[data-check],[data-cycle],[data-edit-task],[data-edit-opp],[data-new-task-for],[data-synth],[data-close]');
+  if (!el) return;
+  const ds = el.dataset;
+  if (ds.tab){ ui.tab = ds.tab; showTab(); }
+  else if (ds.kpi){ ui.kpi = ui.kpi === ds.kpi ? null : ds.kpi; render(); }
+  else if ('clear' in ds){ ui.kpi = null; render(); }
+  else if (ds.group){ ui.group = ds.group; document.querySelectorAll('[data-group]').forEach(b => b.setAttribute('aria-pressed', b.dataset.group === ui.group)); render(); }
+  else if (ds.check){ const t = S.tasks.find(x => x.id === ds.check); t.state = t.state === 'Fait' ? 'À lancer' : 'Fait'; commit(); renderOppTasks(); }
+  else if (ds.cycle){ const t = S.tasks.find(x => x.id === ds.cycle); t.state = STATES[(STATES.indexOf(t.state) + 1) % STATES.length]; commit(); renderOppTasks(); }
+  else if (ds.editTask){ openTask(ds.editTask); }
+  else if (ds.editOpp){ openOpp(ds.editOpp); }
+  else if (ds.newTaskFor){ openTask(null, ds.newTaskFor); }
+  else if (ds.synth){ openSynth(ds.synth); }
+  else if ('close' in ds){ el.closest('dialog').close(); }
+});
+document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+$('btnNewOpp').onclick = () => openOpp(null);
+$('btnNewTask').onclick = () => openTask(null);
+$('btnSettings').onclick = openSettings;
+$('btnShare').onclick = shareFile;
+$('btnSlide').onclick = openSlide;
+$('btnSynth').onclick = () => openSynth(ui.person && ui.person !== '__none' ? ui.person : ME);
+$('alertBackup').onclick = () => download(`sauvegarde_opportunites_${stamp()}.json`, JSON.stringify(S, null, 2), 'application/json');
+$('showDone').onchange = e => { ui.showDone = e.target.checked; render(); };
+$('personFilter').onchange = e => { ui.person = e.target.value; render(); };
+$('search').oninput = e => { ui.q = e.target.value; render(); };
+$('dlgOpp').addEventListener('close', () => { editingOpp = null; });
+
+function showTab(){
+  document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === ui.tab));
+  $('panel-opps').classList.toggle('is-hidden', ui.tab !== 'opps');
+  $('panel-tasks').classList.toggle('is-hidden', ui.tab !== 'tasks');
+}
+document.querySelector('.tabs').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  ui.tab = ui.tab === 'opps' ? 'tasks' : 'opps'; showTab(); $('tab-' + ui.tab).focus();
+});
+
+window.addEventListener('error', e => {
+  try { alertMsg('<b>Une erreur empêche l\'affichage complet.</b> Rechargez la page. Si cela continue, envoyez ce message à Claude : ' + esc(e.message)); } catch(_){}
+});
+try { load(); } catch(e){ try { alertMsg('<b>Une erreur empêche l\'affichage.</b> ' + esc(e.message)); } catch(_){} }
+</script>
+</body></html>
