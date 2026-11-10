@@ -118,9 +118,45 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 .state[data-s="Fait"]{color:var(--k-proactif);border-color:color-mix(in srgb,var(--k-proactif) 45%,transparent)}
 .empty{padding:22px 0;color:var(--muted);font-size:14px}
 
-.opp,.opp-cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.5fr) 160px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px;gap:16px;align-items:center}
+/* Colonnes ajoutables : une grille unique pour l'en-tête et les lignes. */
+.opp-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) 160px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px 32px);gap:16px;align-items:center}
+.opp-table.has-custom .opp,.opp-table.has-custom .opp-cols{min-width:var(--opp-min-width)}
 .opp-cols{font-size:12.5px;font-weight:600;color:var(--muted);padding:0 0 8px;border-bottom:1px solid var(--line)}
-.opp-cols span:nth-last-child(-n+2){text-align:right}
+.opp-cols .c-date{text-align:right}
+
+.opp-cols .c-plus{justify-self:center}
+/* V1.3 : poignées de déplacement pour toutes les colonnes, y compris personnalisées. */
+.opp-cols .col-head{min-width:0;display:flex;align-items:center;gap:4px;position:relative;padding:1px 0}
+.opp-cols .col-head.c-date{justify-content:flex-end}
+.opp-cols .col-head .col-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-grip{font:inherit;font-size:17px;font-weight:700;line-height:1;display:grid;place-items:center;flex:0 0 20px;width:20px;height:26px;padding:0;border:1px solid transparent;border-radius:6px;color:var(--muted);background:transparent;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.col-grip:hover,.col-grip:focus-visible{background:var(--soft);color:var(--violet);border-color:var(--line)}
+.col-grip:active,.col-head.is-dragging .col-grip{cursor:grabbing;background:var(--violet);color:var(--on-violet)}
+.col-head.is-dragging{opacity:.55}
+.col-head.drop-before::before,.col-head.drop-after::after{content:"";position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--violet);border-radius:5px;pointer-events:none;z-index:2}
+.col-head.drop-before::before{left:-9px}.col-head.drop-after::after{right:-9px}
+.share-mode .col-grip{display:none}
+
+.add-col-btn{display:grid;place-items:center;width:29px;height:29px;padding:0;border:1px dashed var(--violet);border-radius:9px;background:color-mix(in srgb,var(--violet) 9%,var(--surface));color:var(--violet);font:inherit;font-size:22px;line-height:1;cursor:pointer}
+.add-col-btn:hover,.add-col-btn:focus-visible{background:var(--violet);color:var(--on-violet)}
+.opp-head-actions{display:flex;align-items:center;gap:8px}
+.opp-head-actions input{max-width:min(260px,calc(100vw - 110px))}
+.mobile-col-btn{display:none}
+@media(max-width:560px){.mobile-col-btn{display:grid}}
+/* les titres personnalisés utilisent aussi .col-head */
+.col-title{min-width:0;max-width:100%;font:inherit;font-weight:600;text-align:left;border:0;background:transparent;color:var(--muted);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px 0}
+.col-title:hover{color:var(--violet);text-decoration:underline;text-underline-offset:2px}
+.c-custom.cell{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.custom-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;margin-top:6px}
+.custom-form-grid .field input,.custom-form-grid .field select{width:100%}
+.col-manager-item{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--soft);padding:10px 0}
+.col-manager-item:last-child{border-bottom:0}
+.col-manager-item .col-name{font-weight:600;overflow-wrap:anywhere}
+.col-manager-item .col-type{font-size:12px;color:var(--muted)}
+.col-manager-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.share-mode .c-plus .add-col-btn,.share-mode .mobile-col-btn{display:none}
+@media(max-width:560px){.custom-form-grid{grid-template-columns:1fr}.col-manager-item{align-items:start;flex-direction:column}.col-manager-actions{justify-content:flex-start}}
 .opp{font:inherit;color:inherit;text-align:left;background:transparent;border:0;cursor:pointer;padding:12px 10px;margin:0 -10px;border-radius:12px;width:calc(100% + 20px)}
 .cell{font-size:14px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cell.muted{color:var(--muted)}
@@ -222,8 +258,8 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .kpi-num{font-size:46px}
 }
 @media (max-width:980px){
-  .opp,.opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 140px minmax(0,1fr) 56px 88px}
-  .opp .c-montant,.opp-cols .c-montant{display:none}
+  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 140px minmax(0,1fr) 56px 88px 32px}
+  .opp-table:not(.has-custom) .opp .c-montant,.opp-table:not(.has-custom) .opp-cols .c-montant{display:none}
 }
 @media (max-width:560px){
   .wrap{padding:18px 14px 40px}
@@ -233,8 +269,8 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .kpi{padding:16px 16px 14px}
   .kpi-num{font-size:42px}
   .kpi-rule{display:none}
-  .opp,.opp-cols{grid-template-columns:minmax(0,1fr) 80px}
-  .opp > :not(:first-child):not(:last-child),.opp-cols > :not(:first-child):not(:last-child){display:none}
+  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1fr) 80px 32px}
+  .opp-table:not(.has-custom) .opp > :not(:first-child):not(.c-date):not(.c-plus),.opp-table:not(.has-custom) .opp-cols > :not(:first-child):not(.c-date):not(.c-plus){display:none}
   .tabs{gap:18px}
   .dlg-body{grid-template-columns:1fr}
   .panel{padding:16px 16px 10px}
@@ -307,11 +343,13 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
     <section class="panel" id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
       <div class="panel-head">
         <h2>Opportunités</h2>
-        <input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité">
+        <div class="opp-head-actions"><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
       </div>
-      <p class="hint">Triées par date clé client (écrit, oral, décision) la plus proche. Cliquez sur une ligne pour modifier la fiche et ses tâches.</p>
-      <div class="opp-cols" aria-hidden="true"><span>Sujet</span><span>Contacts Michelin</span><span>Statut</span><span>Lead local</span><span class="c-montant">Montant estimé</span><span>Tâches</span><span>Date clé client</span></div>
-      <div id="oppList"></div>
+      <p class="hint">Triées par date clé client (écrit, oral, décision) la plus proche. Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ».</p>
+      <div class="opp-table" id="oppTable" aria-label="Tableau des opportunités (défilement horizontal si nécessaire)">
+        <div class="opp-cols" id="oppCols" aria-label="En-têtes de colonnes déplaçables"></div>
+        <div id="oppList"></div>
+      </div>
     </section>
 
     <section class="panel is-hidden" id="panel-tasks" role="tabpanel" aria-labelledby="tab-tasks">
@@ -339,6 +377,7 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 <dialog id="dlgSynth"></dialog>
 <dialog id="dlgSlide" class="wide"></dialog>
 <dialog id="dlgAccess"></dialog>
+<dialog id="dlgCols"></dialog>
 <input type="file" id="fileImport" accept="application/json,.json" hidden="">
 <div class="toast" id="toast" role="status"></div>
 <datalist id="people"></datalist>
@@ -355,7 +394,7 @@ const KEY = 'opportunites-fy27-dashboard';
 // Copie intacte de la page, pour fabriquer la version à partager
 let PRISTINE = '';
 try {
-  PRISTINE = ['authGate','app','dlgOpp','dlgTask','dlgSet','dlgSynth','dlgSlide','dlgAccess','fileImport','toast','people']
+  PRISTINE = ['authGate','app','dlgOpp','dlgTask','dlgSet','dlgSynth','dlgSlide','dlgAccess','dlgCols','fileImport','toast','people']
     .map(id => document.getElementById(id)).filter(Boolean).map(el => el.outerHTML).join('\n');
 } catch(e){ PRISTINE = ''; }
 const EMBED = window.__DASH_DATA__ || null;
@@ -369,6 +408,92 @@ const STATUTS = [...STAGES, URGENCE, 'Stand-by', PERDU];
 const STEPS = STAGES.length;
 const WAIT = ['Oral passé','En attente du résultat'];
 const STATES = ['À lancer','En cours','Fait'];
+const COL_TYPES = {text:'Texte',number:'Nombre',date:'Date',boolean:'Oui / Non'};
+// Clés stables : l'ordre n'affecte jamais les données ni les champs Supabase.
+const BASE_COLS = [
+  {id:'sujet',label:'Sujet',width:'minmax(155px,1.7fr)'},
+  {id:'contacts',label:'Contacts Michelin',width:'minmax(145px,1.5fr)'},
+  {id:'statut',label:'Statut',width:'130px'},
+  {id:'lead',label:'Lead local',width:'minmax(115px,1.1fr)'},
+  {id:'montant',label:'Montant estimé',width:'minmax(105px,.9fr)'},
+  {id:'tasks',label:'Tâches',width:'54px'},
+  {id:'clientDate',label:'Date clé client',width:'100px'}
+];
+function defaultColumns(){
+  return [...BASE_COLS,...customColumns().map(c=>({id:c.id,label:c.label,width:'minmax(160px,1fr)',type:c.type,isCustom:true}))];
+}
+function displayColumns(){
+  const defined=defaultColumns();
+  const byId=new Map(defined.map(c=>[c.id,c]));
+  const remembered=Array.isArray(S?.settings?.columnOrder)?S.settings.columnOrder:[];
+  const ids=[...new Set([...remembered.filter(id=>typeof id==='string'),...defined.map(c=>c.id)])].filter(id=>byId.has(id));
+  return ids.map(id=>byId.get(id));
+}
+function isDefaultColumnOrder(){
+  return displayColumns().every((c,i)=>c.id===defaultColumns()[i]?.id);
+}
+// Insertion avant la colonne cible. La cible null signifie placer à la fin.
+function moveColumnBefore(movedId,beforeId){
+  if(fromShare || !signedInUser || !S) return false;
+  const current=displayColumns().map(c=>c.id);
+  if(!current.includes(movedId)|| (beforeId!==null && !current.includes(beforeId))) return false;
+  const next=current.filter(id=>id!==movedId);
+  const index=beforeId===null ? next.length : next.indexOf(beforeId);
+  next.splice(index,0,movedId);
+  if(next.every((id,i)=>id===current[i])) return false;
+  S.settings.columnOrder=next;
+  commit(); // dashboard_settings.payload.columnOrder, commun à tous les membres
+  return true;
+}
+function shiftColumn(id,direction){
+  const ids=displayColumns().map(c=>c.id),i=ids.indexOf(id),j=i+direction;
+  if(i<0||j<0||j>=ids.length) return false;
+  const changed=direction<0 ? moveColumnBefore(id,ids[j]) : moveColumnBefore(id,ids[j+1]||null);
+  if(changed)ensureMovedColumnVisible(id);
+  return changed;
+}
+function ensureMovedColumnVisible(id){
+  // Après le nouveau rendu, montrer la colonne réellement déplacée,
+  // surtout si elle était en dehors de la zone de défilement.
+  const table=$('oppTable'),head=[...$('oppCols').querySelectorAll('[data-col-key]')].find(x=>x.dataset.colKey===id);
+  if(!table||!head)return;
+  const bounds=table.getBoundingClientRect(),rect=head.getBoundingClientRect();
+  if(rect.left<bounds.left+8)table.scrollLeft-=bounds.left+8-rect.left;
+  else if(rect.right>bounds.right-8)table.scrollLeft+=rect.right-bounds.right+8;
+}
+
+// Les définitions partagées vivent dans dashboard_settings.payload.customColumns.
+// Les valeurs par opportunité vivent dans dashboard_opportunities.payload.customFields.
+function customColumns(){
+  const raw=S?.settings?.customColumns;
+  return Array.isArray(raw) ? raw.filter(c=>c && typeof c.id==='string' && /^c[a-z0-9]+$/i.test(c.id) && typeof c.label==='string' && c.label.trim() && COL_TYPES[c.type]) : [];
+}
+function columnValue(o,c){
+  const raw=String(o?.customFields?.[c.id] ?? '').trim();
+  if(!raw) return '';
+  if(c.type==='date' && /^\d{4}-\d{2}-\d{2}$/.test(raw)){
+    const d=new Date(raw+'T00:00:00');
+    return Number.isNaN(d.getTime()) ? raw : d.toLocaleDateString('fr-FR');
+  }
+  return raw;
+}
+function customFieldsHtml(o){
+  const cols=customColumns();
+  if(!cols.length) return '';
+  const controls=cols.map(c=>{
+    const name='custom__'+c.id, value=String(o?.customFields?.[c.id] ?? '');
+    let control='';
+    if(c.type==='boolean'){
+      control=`<select id="field_${c.id}" name="${name}"><option value="">Non renseigné</option><option value="Oui" ${value==='Oui'?'selected':''}>Oui</option><option value="Non" ${value==='Non'?'selected':''}>Non</option></select>`;
+    } else {
+      const type=c.type==='date'?'date':c.type==='number'?'number':'text';
+      control=`<input id="field_${c.id}" name="${name}" type="${type}" ${type==='number'?'step="any"':''} ${type==='text'?'maxlength="500"':''} value="${esc(value)}">`;
+    }
+    return `<div class="field"><label class="lbl" for="field_${c.id}">${esc(c.label)}</label>${control}</div>`;
+  }).join('');
+  return `<div class="sublist"><div class="sublist-head"><b>Colonnes personnalisées</b><span class="help">Les valeurs sont visibles dans le tableau</span></div><div class="custom-form-grid">${controls}</div></div>`;
+}
+
 const KPIS = [
   {k:'attente',  label:"Attente de décision client", c:'var(--k-attente)'},
   {k:'deadline', label:'Deadline proche',        c:'var(--k-deadline)'},
@@ -427,7 +552,7 @@ function ruleText(k){
 /* ---------- Rendu ---------- */
 function render(){
   const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
-  renderKpis(M); renderFilter(); renderTasks(M); renderOpps(M); renderPeople();
+  renderKpis(M); renderFilter(); renderTasks(M); renderOppColumns(); renderOpps(M); renderPeople();
 }
 
 function renderKpis(M){
@@ -564,33 +689,123 @@ function stageHtml(statut){
   return `<div class="stage ${statut === 'En cours de delivery' || statut === 'Gagné' ? 'delivery' : ''}" title="Étape ${i + 1} sur ${STEPS}"><div class="meter">${bars}</div><span>${esc(statut || 'Sans statut')}</span></div>`;
 }
 
+function renderOppColumns(){
+  const cols=displayColumns(),added=customColumns();
+  const box=$('oppTable');
+  // L'ordre initial sans colonnes supplémentaires conserve l'affichage responsive V1.2.
+  // Dès qu'une colonne est ajoutée ou déplacée, on peut voir TOUTES les colonnes
+  // avec défilement horizontal, quel que soit leur ordre (PC et smartphone).
+  const wide=added.length>0 || !isDefaultColumnOrder();
+  box.classList.toggle('has-custom',wide);
+  if(wide){
+    box.style.setProperty('--opp-grid',cols.map(c=>c.width).join(' ')+' 32px');
+    box.style.setProperty('--opp-min-width',(990+added.length*160)+'px');
+  }else{
+    box.style.removeProperty('--opp-grid');
+    box.style.removeProperty('--opp-min-width');
+  }
+  $('oppCols').innerHTML=cols.map(c=>{
+    const label=c.isCustom
+      ? `<button type="button" class="col-title" data-open-cols title="Gérer la colonne ${esc(c.label)}">${esc(c.label)}</button>`
+      : `<span class="col-label">${esc(c.label)}</span>`;
+    return `<div class="col-head ${c.id==='clientDate'?'c-date':''}" data-col-key="${esc(c.id)}">
+      <button type="button" class="col-grip" data-drag-col="${esc(c.id)}" aria-label="Déplacer la colonne ${esc(c.label)}" title="Maintenir et glisser pour déplacer la colonne (ou utiliser les flèches dans +)"><span aria-hidden="true">⠿</span></button>${label}</div>`;
+  }).join('')+'<span class="c-plus"><button type="button" class="add-col-btn" data-open-cols title="Ajouter ou gérer des colonnes" aria-label="Ajouter ou gérer des colonnes">+</button></span>';
+}
+
 function renderOpps(M){
-  const ids = visibleOppIds(M);
-  const q = ui.q.trim().toLowerCase();
-  const list = oppOrder(M).filter(o => ids.has(o.id)).filter(o => !q || [o.sujet,o.lead,o.contacts,o.acn,o.details].join(' ').toLowerCase().includes(q));
-  $('oppCount').textContent = list.length;
-  if (!list.length){ $('oppList').innerHTML = `<p class="empty">Aucune opportunité ne correspond. Modifiez la recherche ou retirez le filtre.</p>`; }
-  else $('oppList').innerHTML = list.map(o => {
-    const m = M.get(o.id);
-    const open = S.tasks.filter(t => t.oppId === o.id && t.state !== 'Fait').length;
-    const clients = String(o.contacts || '').split('\n').map(x => x.trim()).filter(Boolean).join(', ');
-    const cd = clientDate(o);
-    const date = o.statut === PERDU ? `<div class="odate"><span>Clôturée</span></div>`
-      : !cd && WON.includes(o.statut) ? `<div class="odate"><span>Gagnée</span></div>`
-      : !cd ? `<div class="odate"><span>À définir</span></div>`
-      : cd.past ? `<div class="odate past"><b>${fmt(cd.d)}</b><span>${cd.l}, passée</span></div>`
-      : `<div class="odate ${cd.n <= 3 ? 'soon' : ''}"><b>${cd.n === 0 ? "Aujourd'hui" : cd.n === 1 ? 'Demain' : fmt(cd.d)}</b><span>${cd.l}</span></div>`;
-    return `<button class="opp ${o.statut === PERDU ? 'is-perdu' : ''}" data-edit-opp="${o.id}">
-      <div style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>
-      <span class="cell clients ${clients ? '' : 'muted'}" title="${esc(clients)}">${esc(clients || 'À identifier')}</span>
-      ${stageHtml(o.statut)}
-      <span class="cell ${o.lead ? '' : 'muted'}" title="${esc(o.lead)}">${esc(o.lead || 'À définir')}</span>
-      <span class="cell c-montant ${o.montant ? '' : 'muted'}" title="${esc(o.montant)}">${esc(o.montant || 'À chiffrer')}</span>
-      <span class="ntasks ${open ? '' : 'zero'}" title="Tâches ouvertes">${open}</span>
-      ${date}
-    </button>`;
+  const ids=visibleOppIds(M);
+  const q=ui.q.trim().toLowerCase();
+  const cols=displayColumns();
+  const list=oppOrder(M).filter(o=>ids.has(o.id)).filter(o=>!q||[o.sujet,o.lead,o.contacts,o.acn,o.details,...customColumns().map(c=>o.customFields?.[c.id]||'')].join(' ').toLowerCase().includes(q));
+  $('oppCount').textContent=list.length;
+  if(!list.length){$('oppList').innerHTML='<p class="empty">Aucune opportunité ne correspond. Modifiez la recherche ou retirez le filtre.</p>';return;}
+  $('oppList').innerHTML=list.map(o=>{
+    const open=S.tasks.filter(t=>t.oppId===o.id&&t.state!=='Fait').length;
+    const clients=String(o.contacts||'').split('\n').map(x=>x.trim()).filter(Boolean).join(', ');
+    const cd=clientDate(o);
+    const date=o.statut===PERDU?'<div class="odate"><span>Clôturée</span></div>'
+      :!cd&&WON.includes(o.statut)?'<div class="odate"><span>Gagnée</span></div>'
+      :!cd?'<div class="odate"><span>À définir</span></div>'
+      :cd.past?`<div class="odate past"><b>${fmt(cd.d)}</b><span>${cd.l}, passée</span></div>`
+      :`<div class="odate ${cd.n<=3?'soon':''}"><b>${cd.n===0?"Aujourd'hui":cd.n===1?'Demain':fmt(cd.d)}</b><span>${cd.l}</span></div>`;
+    const cells={
+      sujet:`<div class="c-sujet" style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>`,
+      contacts:`<span class="cell clients ${clients?'':'muted'}" title="${esc(clients)}">${esc(clients||'À identifier')}</span>`,
+      statut:stageHtml(o.statut),
+      lead:`<span class="cell ${o.lead?'':'muted'}" title="${esc(o.lead)}">${esc(o.lead||'À définir')}</span>`,
+      montant:`<span class="cell c-montant ${o.montant?'':'muted'}" title="${esc(o.montant)}">${esc(o.montant||'À chiffrer')}</span>`,
+      tasks:`<span class="ntasks ${open?'':'zero'}" title="Tâches ouvertes">${open}</span>`,
+      clientDate:`<div class="c-date">${date}</div>`
+    };
+    const content=cols.map(c=>{
+      if(!c.isCustom)return cells[c.id];
+      const v=columnValue(o,c);
+      return `<span class="cell c-custom ${v?'':'muted'}" title="${esc(v)}">${esc(v||'—')}</span>`;
+    }).join('');
+    return `<button class="opp ${o.statut===PERDU?'is-perdu':''}" data-edit-opp="${esc(o.id)}">${content}<span class="c-plus" aria-hidden="true"></span></button>`;
   }).join('');
 }
+
+/* Glisser-déposer à la souris, au doigt ou au stylet ; cible calculée selon
+   la position horizontale, y compris dans un tableau défilable. */
+let columnDrag=null, columnDragRaf=0;
+function columnDragMarker(){
+  const drag=columnDrag;
+  if(!drag||!drag.moved)return;
+  const heads=[...$('oppCols').querySelectorAll('[data-col-key]')];
+  heads.forEach(h=>h.classList.remove('drop-before','drop-after'));
+  const other=heads.filter(h=>h.dataset.colKey!==drag.id);
+  const target=other.find(h=>drag.x<h.getBoundingClientRect().left+h.getBoundingClientRect().width/2);
+  drag.before=target?target.dataset.colKey:null;
+  if(target)target.classList.add('drop-before');
+  else if(other.length)other.at(-1).classList.add('drop-after');
+}
+function columnDragScroll(){
+  if(!columnDrag)return;
+  const d=columnDrag,table=$('oppTable'),rect=table.getBoundingClientRect(),margin=45;
+  if(d.moved){
+    if(d.x>rect.right-margin&&d.x<rect.right+20)table.scrollLeft+=18;
+    else if(d.x<rect.left+margin&&d.x>rect.left-20)table.scrollLeft-=18;
+    columnDragMarker();
+  }
+  columnDragRaf=requestAnimationFrame(columnDragScroll);
+}
+function finishColumnDrag(e,canceled=false){
+  const d=columnDrag;
+  if(!d||e.pointerId!==d.pointerId)return;
+  columnDrag=null;
+  if(columnDragRaf)cancelAnimationFrame(columnDragRaf);
+  columnDragRaf=0;
+  $('oppCols').querySelectorAll('.col-head').forEach(h=>h.classList.remove('drop-before','drop-after','is-dragging'));
+  try{if(d.handle.hasPointerCapture(e.pointerId))d.handle.releasePointerCapture(e.pointerId);}catch(_){/* capture libérée par le navigateur */}
+  if(!canceled&&d.moved){
+    if(moveColumnBefore(d.id,d.before)){
+      ensureMovedColumnVisible(d.id);
+      toast('Nouvel ordre des colonnes enregistré');
+    }
+  }
+}
+$('oppCols').addEventListener('pointerdown',e=>{
+  const handle=e.target.closest('[data-drag-col]');
+  if(!handle||e.button!==0||!e.isPrimary||fromShare||!signedInUser||!S)return;
+  e.preventDefault();
+  columnDrag={id:handle.dataset.dragCol,pointerId:e.pointerId,handle,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false,before:null};
+  try{handle.setPointerCapture(e.pointerId);}catch(_){columnDrag=null;return;}
+  columnDragRaf=requestAnimationFrame(columnDragScroll);
+});
+$('oppCols').addEventListener('pointermove',e=>{
+  const d=columnDrag;
+  if(!d||d.pointerId!==e.pointerId)return;
+  d.x=e.clientX;d.y=e.clientY;
+  if(!d.moved&&Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>5){
+    d.moved=true;
+    $('oppCols').querySelectorAll('[data-col-key]').forEach(h=>h.classList.toggle('is-dragging',h.dataset.colKey===d.id));
+  }
+  if(d.moved){e.preventDefault();columnDragMarker();}
+});
+$('oppCols').addEventListener('pointerup',e=>finishColumnDrag(e));
+$('oppCols').addEventListener('pointercancel',e=>finishColumnDrag(e,true));
 
 function allPeople(){
   const set = new Set();
@@ -967,6 +1182,7 @@ function openOpp(id){
       <div class="field" style="justify-content:flex-end">
         <label class="check-line"><input type="checkbox" name="attente" id="f_attente" ${o.attente || autoWait ? 'checked' : ''} ${autoWait ? 'disabled' : ''}><span>En attente de décision client<br><span class="help" id="f_attente_help">${autoWait ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.'}</span></span></label>
       </div>
+      ${customFieldsHtml(o)}
       <div class="sublist" id="oppTasks"></div>
     </div>
     <div class="dlg-foot">
@@ -991,6 +1207,9 @@ function openOpp(id){
     const data = {...o, sujet};
     ['statut','type','lead','montant','contacts','acn','details','dateEcrit','dateOral','dateDecision'].forEach(k => data[k] = String(f[k] ?? '').trim());
     const cb = $('f_attente'); data.attente = cb.disabled ? !!o.attente : cb.checked;
+    // Identifiants de colonnes stables : un renommage ne modifie jamais les valeurs.
+    data.customFields={...(o.customFields||{})};
+    customColumns().forEach(c=>{data.customFields[c.id]=String(f['custom__'+c.id]??'').trim();});
     if (isNew) S.opps.push(data); else S.opps[S.opps.findIndex(x => x.id === data.id)] = data;
     d.close(); commit(); toast(isNew ? 'Opportunité créée' : 'Opportunité enregistrée');
   };
@@ -1007,6 +1226,73 @@ function renderOppTasks(){
   const list = S.tasks.filter(t => t.oppId === editingOpp.o.id).sort(sortTasks);
   box.innerHTML = `<div class="sublist-head"><b>Tâches de cette opportunité</b><button type="button" class="btn" data-new-task-for="${editingOpp.o.id}">Ajouter une tâche</button></div>` +
     (list.length ? list.map(t => taskRow(t, true)).join('') : `<p class="help">Aucune tâche. Ajoutez la prochaine action et son porteur.</p>`);
+}
+
+/* ---------- Gestion des colonnes personnalisées ---------- */
+function openColumns(){
+  if(fromShare){toast('Les colonnes se configurent dans le tableau de bord connecté');return;}
+  if(!S||!signedInUser){toast('Connectez-vous pour gérer les colonnes');return;}
+  const d=$('dlgCols');
+  d.innerHTML=`<div class="dlg-head"><h3>Colonnes du tableau</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-body">
+      <div class="field full"><span class="lbl">Ordre des colonnes</span><p class="help" style="margin:0 0 5px">Glissez les poignées ⠿ dans le tableau, ou déplacez ici les colonnes à l'aide des flèches gauche/droite. L'ordre est partagé avec tous les membres.</p><div id="cm_list"></div></div>
+      <div class="field full" style="border-top:1px solid var(--line);padding-top:15px"><b>Ajouter une colonne</b><span class="help">Elle sera visible par tous les membres du dashboard.</span></div>
+      <div class="field"><label class="lbl" for="cm_name">Nom de la colonne</label><input id="cm_name" type="text" maxlength="60" placeholder="Ex. Priorité, Responsable, Budget…"></div>
+      <div class="field"><label class="lbl" for="cm_type">Type de valeur</label><select id="cm_type">${Object.entries(COL_TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+    </div>
+    <div class="dlg-foot"><span class="help">Cliquez sur une opportunité pour remplir les colonnes personnalisées.</span><div class="right"><button class="btn quiet" type="button" data-close>Fermer</button><button class="btn primary" type="button" id="cm_add">+ Ajouter la colonne</button></div></div>`;
+  const fillList=()=>{
+    const cols=displayColumns();
+    $('cm_list').innerHTML=cols.map((c,i)=>`<div class="col-manager-item">
+      <span><span class="col-name">${esc(c.label)}</span><br><span class="col-type">${c.isCustom?COL_TYPES[c.type]:'Colonne d’origine'}</span></span>
+      <span class="col-manager-actions">
+        <button class="btn small" type="button" data-shift-col="${esc(c.id)}" data-shift-dir="-1" aria-label="Déplacer ${esc(c.label)} vers la gauche" title="Déplacer vers la gauche" ${i===0?'disabled':''}>←</button>
+        <button class="btn small" type="button" data-shift-col="${esc(c.id)}" data-shift-dir="1" aria-label="Déplacer ${esc(c.label)} vers la droite" title="Déplacer vers la droite" ${i===cols.length-1?'disabled':''}>→</button>
+        ${c.isCustom?`<button class="btn small" type="button" data-rename-col="${esc(c.id)}">Renommer</button><button class="btn small danger" type="button" data-remove-col="${esc(c.id)}">Supprimer</button>`:''}
+      </span>
+    </div>`).join('');
+  };
+  fillList();d.showModal();$('cm_name').focus();
+  $('cm_add').onclick=()=>{
+    const name=$('cm_name').value.trim();
+    const type=$('cm_type').value;
+    if(!name){toast('Indiquez un nom de colonne');$('cm_name').focus();return;}
+    if(displayColumns().some(c=>c.label.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr'))){toast('Une colonne porte déjà ce nom');return;}
+    if(!COL_TYPES[type]){toast('Type de colonne inconnu');return;}
+    S.settings.customColumns=[...customColumns(),{id:uid('c'),label:name,type}];
+    commit();fillList();$('cm_name').value='';$('cm_name').focus();toast('Colonne ajoutée — synchronisation en cours');
+  };
+  $('cm_name').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('cm_add').click();}});
+  $('cm_list').onclick=e=>{
+    const shift=e.target.closest('[data-shift-col]');
+    const rename=e.target.closest('[data-rename-col]');
+    const remove=e.target.closest('[data-remove-col]');
+    if(shift){
+      if(shiftColumn(shift.dataset.shiftCol,Number(shift.dataset.shiftDir))){
+        const id=shift.dataset.shiftCol,dir=shift.dataset.shiftDir;
+        fillList();
+        const button=[...$('cm_list').querySelectorAll('[data-shift-col]')].find(b=>b.dataset.shiftCol===id&&b.dataset.shiftDir===dir&&!b.disabled);
+        if(button)button.focus();
+        toast('Ordre des colonnes mis à jour');
+      }
+    }else if(rename){
+      const col=customColumns().find(c=>c.id===rename.dataset.renameCol);if(!col)return;
+      const next=window.prompt('Nouveau nom de la colonne :',col.label);
+      if(next===null)return;
+      const label=next.trim().slice(0,60);
+      if(!label){toast('Le nom ne peut pas être vide');return;}
+      if(displayColumns().some(c=>c.id!==col.id&&c.label.toLocaleLowerCase('fr')===label.toLocaleLowerCase('fr'))){toast('Ce nom existe déjà');return;}
+      S.settings.customColumns=customColumns().map(c=>c.id===col.id?{...c,label}:c);
+      commit();fillList();toast('Colonne renommée — synchronisation en cours');
+    }else if(remove){
+      const col=customColumns().find(c=>c.id===remove.dataset.removeCol);if(!col)return;
+      if(!window.confirm(`Supprimer la colonne « ${col.label} » du tableau ? Ses anciennes valeurs resteront dans les sauvegardes JSON.`))return;
+      // Les anciennes valeurs restent dans les fiches, sans réécriture massive.
+      S.settings.customColumns=customColumns().filter(c=>c.id!==col.id);
+      S.settings.columnOrder=displayColumns().map(c=>c.id).filter(id=>id!==col.id);
+      commit();fillList();toast('Colonne supprimée — synchronisation en cours');
+    }
+  };
 }
 
 /* ---------- Fiche tâche ---------- */
@@ -1362,7 +1648,7 @@ $('fileImport').onchange = e => {
 
 /* ---------- Interactions ---------- */
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-tab],[data-kpi],[data-clear],[data-group],[data-check],[data-cycle],[data-edit-task],[data-edit-opp],[data-new-task-for],[data-synth],[data-close]');
+  const el = e.target.closest('[data-tab],[data-kpi],[data-clear],[data-group],[data-check],[data-cycle],[data-edit-task],[data-edit-opp],[data-new-task-for],[data-synth],[data-open-cols],[data-close]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab){ ui.tab = ds.tab; showTab(); }
@@ -1375,6 +1661,7 @@ document.addEventListener('click', e => {
   else if (ds.editOpp){ openOpp(ds.editOpp); }
   else if (ds.newTaskFor){ openTask(null, ds.newTaskFor); }
   else if (ds.synth){ openSynth(ds.synth); }
+  else if ('openCols' in ds){ openColumns(); }
   else if ('close' in ds){ el.closest('dialog').close(); }
 });
 document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
