@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27</title><style>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27 — V1.4</title><style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 :root{
   --paper:#F4F3F8;--surface:#FFFFFF;--ink:#231C3A;--muted:#6E6886;--line:#E3E0EC;--soft:#EEECF4;
@@ -120,7 +120,7 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 
 /* Colonnes ajoutables : une grille unique pour l'en-tête et les lignes. */
 .opp-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
-.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) 160px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px 32px);gap:16px;align-items:center}
+.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) 150px 80px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px 32px);gap:16px;align-items:center}
 .opp-table.has-custom .opp,.opp-table.has-custom .opp-cols{min-width:var(--opp-min-width)}
 .opp-cols{font-size:12.5px;font-weight:600;color:var(--muted);padding:0 0 8px;border-bottom:1px solid var(--line)}
 .opp-cols .c-date{text-align:right}
@@ -177,6 +177,18 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 .stage .urgence{align-self:flex-start;max-width:100%;font-size:12px;font-weight:700;color:var(--k-deadline);background:color-mix(in srgb,var(--k-deadline) 13%,transparent);border:1px solid color-mix(in srgb,var(--k-deadline) 35%,transparent);padding:3px 9px;border-radius:8px;line-height:1.3;white-space:normal !important;overflow:visible !important}
 select.is-urgence{color:var(--k-deadline);font-weight:700;background:color-mix(in srgb,var(--k-deadline) 10%,var(--paper));border-color:color-mix(in srgb,var(--k-deadline) 40%,transparent)}
 .stage .perdu{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--soft);border:1px solid var(--line);padding:3px 9px;border-radius:8px;line-height:1.3}
+.stage .perdu{white-space:normal !important;overflow:visible !important;line-height:1.3}
+.prio{justify-self:start;display:inline-grid;place-items:center;min-width:32px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.prio.p1{color:#fff;background:var(--k-deadline);border-color:var(--k-deadline)}
+.prio.p2{color:#8A5A00;background:#FFF1D6;border-color:#F3D08A}
+.prio.p3{color:var(--muted);background:var(--soft)}
+@media (prefers-color-scheme:dark){.prio.p2{color:#FFD58A;background:#3A2E14;border-color:#6B5320}}
+.scope{color:var(--muted)}.scope b{color:var(--ink)}
+.dlg-body [hidden]{display:none !important}
+.radio-line{display:flex;gap:16px;flex-wrap:wrap;padding:8px 0}
+.radio-line label{display:inline-flex;align-items:center;gap:7px;font-size:14px;cursor:pointer}
+.radio-line input{accent-color:var(--violet);width:16px;height:16px;margin:0}
+.date-group-title{grid-column:1/-1;font-size:12.5px;font-weight:700;color:var(--muted);margin:4px 0 -6px}
 .opp.is-perdu .opp-name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
 .stage.standby .meter i{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 5px)}
 .stage span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -258,7 +270,7 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .kpi-num{font-size:46px}
 }
 @media (max-width:980px){
-  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 140px minmax(0,1fr) 56px 88px 32px}
+  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 130px 72px minmax(0,1fr) 56px 88px 32px}
   .opp-table:not(.has-custom) .opp .c-montant,.opp-table:not(.has-custom) .opp-cols .c-montant{display:none}
 }
 @media (max-width:560px){
@@ -285,7 +297,23 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .panel{margin-bottom:16px}
   .panel,.kpis{border-color:#ccc}
 }
-</style></head><body class="auth-gated">
+</style>
+<!-- V1.4 = évolutions métier du fichier joint + colonnes dynamiques et déplaçables V1.3 -->
+<!-- ============================================================
+     RÉGLAGES SUPABASE : à renseigner par la personne qui héberge
+     le dashboard (Supabase > Project Settings > API).
+     La clé publishable peut être visible : les accès sont protégés
+     par les règles de sécurité (RLS) de la base.
+     ============================================================ -->
+<script>
+  // V1.4 : paramètres publics déjà employés par la V1.3.
+  // Ne jamais ajouter ici de clé sb_secret_ ou service_role.
+  window.DASH_SUPABASE_URL = 'https://kbupzecuqcnauzaojgfd.supabase.co';
+  window.DASH_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IGWGFVWTLKQxGHtIMjtVQ_7Wf8olK8';
+  window.__DASH_DATA__ = null; // Données commerciales uniquement dans Supabase.
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head><body class="auth-gated">
 <div id="authGate" role="region" aria-label="Connexion sécurisée">
   <div class="auth-card">
     <div class="auth-mark">FY27</div>
@@ -293,18 +321,18 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
     <p id="authIntro">Connectez-vous avec votre compte autorisé pour accéder au tableau de bord partagé.</p>
     <form id="loginForm">
       <label class="lbl" for="loginEmail">Adresse email</label>
-      <input id="loginEmail" type="email" autocomplete="username" placeholder="prenom.nom@entreprise.com" required>
+      <input id="loginEmail" type="email" autocomplete="username" placeholder="prenom.nom@entreprise.com" required="">
       <label class="lbl" for="loginPassword">Mot de passe</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" required>
+      <input id="loginPassword" type="password" autocomplete="current-password" required="">
       <button class="btn primary" type="submit" id="loginButton">Se connecter</button>
     </form>
-    <section id="setupScreen" hidden aria-label="Activation du compte">
+    <section id="setupScreen" hidden="" aria-label="Activation du compte">
       <p class="setup-note">Votre lien d'invitation ou de récupération a été validé. Définissez votre mot de passe pour accéder à l'application.</p>
       <form id="setupForm">
         <label class="lbl" for="setupPassword">Créer mon mot de passe</label>
-        <input id="setupPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8 caractères minimum">
+        <input id="setupPassword" type="password" autocomplete="new-password" minlength="8" required="" placeholder="8 caractères minimum">
         <label class="lbl" for="setupPassword2">Confirmer mon mot de passe</label>
-        <input id="setupPassword2" type="password" autocomplete="new-password" minlength="8" required placeholder="Saisir à nouveau le mot de passe">
+        <input id="setupPassword2" type="password" autocomplete="new-password" minlength="8" required="" placeholder="Saisir à nouveau le mot de passe">
         <button class="btn primary" type="submit" id="setupButton">Activer mon compte</button>
       </form>
     </section>
@@ -336,16 +364,17 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 
   <nav class="tabs" role="tablist" aria-label="Vues du dashboard">
     <button class="tab" role="tab" id="tab-opps" data-tab="opps" aria-controls="panel-opps" aria-selected="true">Opportunités<span class="badge" id="oppCount"></span></button>
+    <button class="tab" role="tab" id="tab-orig" data-tab="orig" aria-controls="panel-opps" aria-selected="false">Origination<span class="badge" id="origCount"></span></button>
     <button class="tab" role="tab" id="tab-tasks" data-tab="tasks" aria-controls="panel-tasks" aria-selected="false">Tâches assignées<span class="badge" id="taskCount"></span></button>
   </nav>
 
   <main>
     <section class="panel" id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
       <div class="panel-head">
-        <h2>Opportunités</h2>
-        <div class="opp-head-actions"><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
+        <h2 id="oppTitle">Opportunités</h2>
+        <div class="opp-head-actions"><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols="" title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
       </div>
-      <p class="hint">Triées par date clé client (écrit, oral, décision) la plus proche. Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ».</p>
+      <p class="hint">Triées par date clé client la plus proche (RFP : écrit, oral, décision ; autres : envoi de la proposition, présentation). Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ».</p>
       <div class="opp-table" id="oppTable" aria-label="Tableau des opportunités (défilement horizontal si nécessaire)">
         <div class="opp-cols" id="oppCols" aria-label="En-têtes de colonnes déplaçables"></div>
         <div id="oppList"></div>
@@ -382,14 +411,6 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 <div class="toast" id="toast" role="status"></div>
 <datalist id="people"></datalist>
 <script>
-// À renseigner AVANT de publier sur GitHub Pages : uniquement la clé "publishable".
-// NE JAMAIS METTRE de clé sb_secret_ ou service_role dans ce fichier.
-window.DASH_SUPABASE_URL = 'https://kbupzecuqcnauzaojgfd.supabase.co';
-window.DASH_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IGWGFVWTLKQxGHtIMjtVQ_7Wf8olK8';
-window.__DASH_DATA__ = null; // Les données réelles sont exclusivement dans Supabase.
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
 const KEY = 'opportunites-fy27-dashboard';
 // Copie intacte de la page, pour fabriquer la version à partager
 let PRISTINE = '';
@@ -400,13 +421,61 @@ try {
 const EMBED = window.__DASH_DATA__ || null;
 let fromShare = document.body.classList.contains('share-mode') && !!EMBED;
 let ME = ''; // Nom du membre connecté, renseigné après validation du compte Supabase.
-const STAGES = ['Comprendre le besoin','Lancer la rédaction','Ecrit en cours','Oral en préparation','Oral passé','En attente du résultat','Gagné','En cours de delivery'];
-const URGENCE = 'Urgence non prévue détectée';
-const PERDU = 'Perdu';
-const WON = ['Gagné','En cours de delivery'];
-const STATUTS = [...STAGES, URGENCE, 'Stand-by', PERDU];
+// V2 : référentiels des fiches
+// Statuts selon le classement de la fiche
+const STATUTS_OPP = ['À qualifier','Réponse écrite','Gagnée','Perdue','Annulée - décision client','Annulée - décision ACN'];
+const STATUTS_ORIG = ['À qualifier','Proposition écrite'];
+const STATUTS = [...new Set([...STATUTS_OPP, ...STATUTS_ORIG])];
+const statutsFor = nature => nature === 'Origination' ? STATUTS_ORIG : STATUTS_OPP;
+// Étapes de la barre de progression (les statuts de clôture s'affichent à part)
+const stagesFor = nature => nature === 'Origination' ? STATUTS_ORIG : ['À qualifier','Réponse écrite','Gagnée'];
+const STAGES = stagesFor('Opportunité');
 const STEPS = STAGES.length;
-const WAIT = ['Oral passé','En attente du résultat'];
+const URGENCE = 'Urgence non prévue détectée'; // ancien statut, n'est plus proposé
+const PERDU = 'Perdue';
+const ANNULE = ['Annulée - décision client','Annulée - décision ACN'];
+const CLOSED_LOST = [PERDU, ...ANNULE];
+const WON = ['Gagnée'];
+const WAIT = []; // l'attente de décision client se coche désormais dans la fiche
+// Statut à reprendre quand le classement change (ou pour une valeur inconnue)
+function fitStatut(statut, nature){
+  if (statutsFor(nature).includes(statut)) return statut;
+  if (nature === 'Origination') return statut === 'Réponse écrite' ? 'Proposition écrite' : 'À qualifier';
+  return statut === 'Proposition écrite' ? 'Réponse écrite' : 'À qualifier';
+}
+const ORIGINES = ['Proactive','Besoin client','RFP'];
+const NATURES = ['Opportunité','Origination'];
+const PRIORITES = ['P1','P2','P3'];
+// Dates clés : RFP = écrit, oral, décision ; autres origines = envoi de la proposition, présentation.
+const RFP_DATES = [['dateEcrit','Écrit'],['dateOral','Oral'],['dateDecision','Décision']];
+const STD_DATES = [['dateEnvoi','Envoi proposition'],['datePresentation','Présentation']];
+const keyDates = o => o && o.type === 'RFP' ? RFP_DATES : STD_DATES;
+const deadlineDates = o => o && o.type === 'RFP' ? ['dateEcrit','dateOral'] : ['dateEnvoi','datePresentation'];
+// Migration V2 des fiches existantes, sans perte : l'ancien statut est gardé dans statutAvant,
+// les anciennes dates RFP restent enregistrées (visibles si l'origine passe en RFP).
+const STATUT_V2 = {'Comprendre le besoin':'À qualifier','Stand-by':'À qualifier','Urgence non prévue détectée':'À qualifier',
+  'Lancer la rédaction':'Réponse écrite','Ecrit en cours':'Réponse écrite','Oral en préparation':'Réponse écrite',
+  'Oral passé':'Réponse écrite','En attente du résultat':'Réponse écrite','Gagné':'Gagnée','En cours de delivery':'Gagnée','Perdu':'Perdue'};
+function migrateOpp(o){
+  if (!o || typeof o !== 'object') return o;
+  const x = {...o};
+  if (!x.v2){
+    if (['Oral passé','En attente du résultat'].includes(x.statut)) x.attente = true;
+    if (STATUT_V2[x.statut]){ x.statutAvant = x.statut; x.statut = STATUT_V2[x.statut]; }
+    if (x.type !== 'RFP'){
+      if (x.dateEcrit && !x.dateEnvoi) x.dateEnvoi = x.dateEcrit;
+      if (x.dateOral && !x.datePresentation) x.datePresentation = x.dateOral;
+    }
+    x.v2 = true;
+  }
+  if (!NATURES.includes(x.nature)) x.nature = 'Opportunité';
+  // « En attente du résultat » (première V2) devient « Réponse écrite » + case d'attente cochée
+  if (x.statut === 'En attente du résultat'){ x.statut = 'Réponse écrite'; x.attente = true; }
+  x.statut = fitStatut(x.statut, x.nature);
+  if (!ORIGINES.includes(x.type)) x.type = 'Besoin client';
+  if (!PRIORITES.includes(x.priorite)) x.priorite = '';
+  return x;
+}
 const STATES = ['À lancer','En cours','Fait'];
 const COL_TYPES = {text:'Texte',number:'Nombre',date:'Date',boolean:'Oui / Non'};
 // Clés stables : l'ordre n'affecte jamais les données ni les champs Supabase.
@@ -414,6 +483,7 @@ const BASE_COLS = [
   {id:'sujet',label:'Sujet',width:'minmax(155px,1.7fr)'},
   {id:'contacts',label:'Contacts Michelin',width:'minmax(145px,1.5fr)'},
   {id:'statut',label:'Statut',width:'130px'},
+  {id:'priorite',label:'Priorité',width:'80px'},
   {id:'lead',label:'Lead local',width:'minmax(115px,1.1fr)'},
   {id:'montant',label:'Montant estimé',width:'minmax(105px,.9fr)'},
   {id:'tasks',label:'Tâches',width:'54px'},
@@ -426,7 +496,13 @@ function displayColumns(){
   const defined=defaultColumns();
   const byId=new Map(defined.map(c=>[c.id,c]));
   const remembered=Array.isArray(S?.settings?.columnOrder)?S.settings.columnOrder:[];
-  const ids=[...new Set([...remembered.filter(id=>typeof id==='string'),...defined.map(c=>c.id)])].filter(id=>byId.has(id));
+  const ids=[...new Set(remembered.filter(id=>typeof id==='string'&&byId.has(id)))];
+  // Une colonne absente de l'ordre mémorisé (ex. Priorité, ajoutée en V2) se place après sa voisine d'origine.
+  defined.forEach((c,i)=>{
+    if(ids.includes(c.id)) return;
+    const prev=defined.slice(0,i).reverse().find(p=>ids.includes(p.id));
+    ids.splice(prev?ids.indexOf(prev.id)+1:0,0,c.id);
+  });
   return ids.map(id=>byId.get(id));
 }
 function isDefaultColumnOrder(){
@@ -436,7 +512,7 @@ function isDefaultColumnOrder(){
 function moveColumnBefore(movedId,beforeId){
   if(fromShare || !signedInUser || !S) return false;
   const current=displayColumns().map(c=>c.id);
-  if(!current.includes(movedId)|| (beforeId!==null && !current.includes(beforeId))) return false;
+  if(!current.includes(movedId)|| (beforeId!==null && !current.includes(beforeId)) || movedId===beforeId) return false;
   const next=current.filter(id=>id!==movedId);
   const index=beforeId===null ? next.length : next.indexOf(beforeId);
   next.splice(index,0,movedId);
@@ -523,26 +599,26 @@ function metrics(o){
   const seuil = Number(S.settings.seuil) || 15;
   const open = S.tasks.filter(t => t.oppId === o.id && t.state !== 'Fait');
   const won = WON.includes(o.statut);
-  const closed = o.statut === PERDU || won;
+  const closed = CLOSED_LOST.includes(o.statut) || won;
   const cd = clientDate(o);
-  const attente = !closed && (WAIT.includes(o.statut) || !!o.attente);
-  const oppDates = [['dateEcrit','Écrit'],['dateOral','Oral'],['dateDecision','Décision']]
+  const attente = !closed && !!o.attente;
+  const oppDates = keyDates(o)
     .filter(([k]) => o[k]).map(([k,l]) => ({d:o[k], l, n:diff(o[k])}));
   const taskDates = open.filter(t => t.due).map(t => ({d:t.due, l:'Tâche', n:diff(t.due)}));
   const urgent = [...oppDates.filter(x => x.n >= 0 && x.n <= seuil), ...taskDates.filter(x => x.n <= seuil)].sort((a,b) => a.n - b.n);
   const upcoming = [...oppDates.filter(x => x.n >= 0), ...taskDates].sort((a,b) => a.n - b.n);
   const demarrer = open.length === 0 ? !attente : !open.some(t => t.state === 'En cours');
-  // Deadline proche : écrit ou oral à venir, hors attente de décision client
-  const deadline = !closed && !attente && ['dateEcrit','dateOral'].some(k => o[k] && diff(o[k]) >= 0);
+  // Deadline proche : RFP = écrit ou oral à venir ; autres = envoi de la proposition ou présentation à venir.
+  const deadline = !closed && !attente && deadlineDates(o).some(k => o[k] && diff(o[k]) >= 0);
   return {attente, deadline, gagne: won, perdu: o.statut === PERDU, sansdate: !closed && !cd, proactif: o.type === 'Proactive', demarrer, next: closed ? null : (upcoming[0] || null)};
 }
 function ruleText(k){
   const s = S.settings.seuil;
   return {
-    attente:"Statut « En attente du résultat » ou « Oral passé », ou case cochée dans la fiche.",
-    deadline:"Une date d'écrit ou d'oral est fixée et à venir, hors attente de décision client.",
-    gagne:"Statut « Gagné » ou « En cours de delivery ».",
-    perdu:"Statut « Perdu ».",
+    attente:"Case « En attente de décision client » cochée dans la fiche.",
+    deadline:"RFP : écrit ou oral à venir. Autres : envoi de la proposition ou présentation à venir. Hors attente de décision.",
+    gagne:"Statut « Gagnée ».",
+    perdu:"Statut « Perdue ».",
     sansdate:"Aucune date clé client renseignée : à obtenir du client.",
     proactif:"Opportunités initiées par Accenture, sans demande du client.",
     demarrer:"Des tâches sont prévues, mais aucune n'a démarré : elles sont toutes « À lancer »."
@@ -555,11 +631,15 @@ function render(){
   renderKpis(M); renderFilter(); renderTasks(M); renderOppColumns(); renderOpps(M); renderPeople();
 }
 
+// Les indicateurs portent sur l'onglet affiché : Opportunités, Origination, ou tout (onglet Tâches).
+function scopeNature(){ return ui.tab === 'orig' ? 'Origination' : ui.tab === 'opps' ? 'Opportunité' : null; }
+function scopeOpps(){ const n = scopeNature(); return n ? S.opps.filter(o => o.nature === n) : S.opps; }
 function renderKpis(M){
+  const scope = scopeOpps();
   $('kpis').innerHTML = KPIS.map(K => {
-    const n = S.opps.filter(o => M.get(o.id)[K.k]).length;
+    const n = scope.filter(o => M.get(o.id)[K.k]).length;
     return `<button class="kpi" style="--c:${K.c}" data-kpi="${K.k}" aria-pressed="${ui.kpi === K.k}">
-      <span class="kpi-num">${n}<small>/ ${S.opps.length}</small></span>
+      <span class="kpi-num">${n}<small>/ ${scope.length}</small></span>
       <span class="kpi-label">${K.label}</span>
       <span class="kpi-rule">${ruleText(K.k)}</span>
     </button>`;
@@ -568,13 +648,15 @@ function renderKpis(M){
 
 function renderFilter(){
   const K = KPIS.find(x => x.k === ui.kpi);
-  $('filterbar').innerHTML = K
+  const n = scopeNature();
+  const scope = `<span class="scope">Indicateurs : <b>${n === 'Origination' ? 'Origination' : n ? 'Opportunités' : 'Opportunités et origination'}</b></span>`;
+  $('filterbar').innerHTML = scope + (K
     ? `<span class="chip" style="--c:${K.c}">Filtre : <b>${K.label.toLowerCase()}</b><button data-clear>Retirer le filtre</button></span>`
-    : `<span>Cliquez sur un indicateur pour filtrer les deux onglets.</span>`;
+    : `<span>Cliquez sur un indicateur pour filtrer la liste et les tâches.</span>`);
 }
 
 function visibleOppIds(M){
-  return new Set(S.opps.filter(o => !ui.kpi || M.get(o.id)[ui.kpi]).map(o => o.id));
+  return new Set(scopeOpps().filter(o => !ui.kpi || M.get(o.id)[ui.kpi]).map(o => o.id));
 }
 
 function dueChip(t){
@@ -656,9 +738,9 @@ function renderTasks(M){
   }).join('');
 }
 
-// Date clé client : écrit, oral ou décision. La prochaine à venir, sinon la plus récente passée.
+// Date clé client (selon l'origine) : la prochaine à venir, sinon la plus récente passée.
 function clientDate(o){
-  const all = [['dateEcrit','Écrit'],['dateOral','Oral'],['dateDecision','Décision']]
+  const all = keyDates(o)
     .filter(([k]) => o[k]).map(([k,l]) => ({d:o[k], l, n:diff(o[k])}));
   if (!all.length) return null;
   const fut = all.filter(x => x.n >= 0).sort((a,b) => a.n - b.n);
@@ -669,7 +751,7 @@ function oppOrder(M){
   return [...S.opps].sort((a,b) => {
     const ua = a.statut === URGENCE, ub = b.statut === URGENCE;
     if (ua !== ub) return ua ? -1 : 1;
-    const pa = a.statut === PERDU, pb = b.statut === PERDU;
+    const pa = CLOSED_LOST.includes(a.statut), pb = CLOSED_LOST.includes(b.statut);
     if (pa !== pb) return pa ? 1 : -1;
     const ca = clientDate(a), cb = clientDate(b);
     const ra = !ca ? 2 : ca.past ? 1 : 0, rb = !cb ? 2 : cb.past ? 1 : 0;
@@ -680,13 +762,13 @@ function oppOrder(M){
   });
 }
 
-function stageHtml(statut){
+function stageHtml(statut, nature){
   if (statut === URGENCE) return `<div class="stage"><span class="urgence" title="${URGENCE}">${URGENCE}</span></div>`;
-  if (statut === PERDU) return `<div class="stage"><span class="perdu">Perdu</span></div>`;
+  if (CLOSED_LOST.includes(statut)) return `<div class="stage"><span class="perdu" title="${esc(statut)}">${esc(statut)}</span></div>`;
   if (statut === 'Stand-by') return `<div class="stage standby"><div class="meter">${'<i></i>'.repeat(STEPS)}</div><span>Stand-by</span></div>`;
-  const i = STATUTS.indexOf(statut);
-  const bars = Array.from({length:STEPS}, (_,k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('');
-  return `<div class="stage ${statut === 'En cours de delivery' || statut === 'Gagné' ? 'delivery' : ''}" title="Étape ${i + 1} sur ${STEPS}"><div class="meter">${bars}</div><span>${esc(statut || 'Sans statut')}</span></div>`;
+  const st = stagesFor(nature), steps = st.length, i = st.indexOf(statut);
+  const bars = Array.from({length:steps}, (_,k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('');
+  return `<div class="stage ${WON.includes(statut) ? 'delivery' : ''}" title="Étape ${i + 1} sur ${steps}"><div class="meter">${bars}</div><span>${esc(statut || 'Sans statut')}</span></div>`;
 }
 
 function renderOppColumns(){
@@ -699,7 +781,7 @@ function renderOppColumns(){
   box.classList.toggle('has-custom',wide);
   if(wide){
     box.style.setProperty('--opp-grid',cols.map(c=>c.width).join(' ')+' 32px');
-    box.style.setProperty('--opp-min-width',(990+added.length*160)+'px');
+    box.style.setProperty('--opp-min-width',(1080+added.length*160)+'px');
   }else{
     box.style.removeProperty('--opp-grid');
     box.style.removeProperty('--opp-min-width');
@@ -718,13 +800,15 @@ function renderOpps(M){
   const q=ui.q.trim().toLowerCase();
   const cols=displayColumns();
   const list=oppOrder(M).filter(o=>ids.has(o.id)).filter(o=>!q||[o.sujet,o.lead,o.contacts,o.acn,o.details,...customColumns().map(c=>o.customFields?.[c.id]||'')].join(' ').toLowerCase().includes(q));
-  $('oppCount').textContent=list.length;
-  if(!list.length){$('oppList').innerHTML='<p class="empty">Aucune opportunité ne correspond. Modifiez la recherche ou retirez le filtre.</p>';return;}
+  const kpiOk=o=>!ui.kpi||M.get(o.id)[ui.kpi];
+  $('oppCount').textContent=S.opps.filter(o=>o.nature==='Opportunité'&&kpiOk(o)).length;
+  $('origCount').textContent=S.opps.filter(o=>o.nature==='Origination'&&kpiOk(o)).length;
+  if(!list.length){$('oppList').innerHTML=`<p class="empty">${ui.tab==='orig'?'Aucune origination':'Aucune opportunité'} ne correspond. Modifiez la recherche, retirez le filtre ou cochez « ${ui.tab==='orig'?'Origination':'Opportunité'} » dans une fiche.</p>`;return;}
   $('oppList').innerHTML=list.map(o=>{
     const open=S.tasks.filter(t=>t.oppId===o.id&&t.state!=='Fait').length;
     const clients=String(o.contacts||'').split('\n').map(x=>x.trim()).filter(Boolean).join(', ');
     const cd=clientDate(o);
-    const date=o.statut===PERDU?'<div class="odate"><span>Clôturée</span></div>'
+    const date=CLOSED_LOST.includes(o.statut)?'<div class="odate"><span>Clôturée</span></div>'
       :!cd&&WON.includes(o.statut)?'<div class="odate"><span>Gagnée</span></div>'
       :!cd?'<div class="odate"><span>À définir</span></div>'
       :cd.past?`<div class="odate past"><b>${fmt(cd.d)}</b><span>${cd.l}, passée</span></div>`
@@ -732,7 +816,8 @@ function renderOpps(M){
     const cells={
       sujet:`<div class="c-sujet" style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>`,
       contacts:`<span class="cell clients ${clients?'':'muted'}" title="${esc(clients)}">${esc(clients||'À identifier')}</span>`,
-      statut:stageHtml(o.statut),
+      statut:stageHtml(o.statut, o.nature),
+      priorite:o.priorite?`<span class="prio ${o.priorite.toLowerCase()}" title="Priorité ${esc(o.priorite)}">${esc(o.priorite)}</span>`:'<span class="cell muted" title="Priorité non définie">—</span>',
       lead:`<span class="cell ${o.lead?'':'muted'}" title="${esc(o.lead)}">${esc(o.lead||'À définir')}</span>`,
       montant:`<span class="cell c-montant ${o.montant?'':'muted'}" title="${esc(o.montant)}">${esc(o.montant||'À chiffrer')}</span>`,
       tasks:`<span class="ntasks ${open?'':'zero'}" title="Tâches ouvertes">${open}</span>`,
@@ -743,7 +828,7 @@ function renderOpps(M){
       const v=columnValue(o,c);
       return `<span class="cell c-custom ${v?'':'muted'}" title="${esc(v)}">${esc(v||'—')}</span>`;
     }).join('');
-    return `<button class="opp ${o.statut===PERDU?'is-perdu':''}" data-edit-opp="${esc(o.id)}">${content}<span class="c-plus" aria-hidden="true"></span></button>`;
+    return `<button class="opp ${CLOSED_LOST.includes(o.statut)?'is-perdu':''}" data-edit-opp="${esc(o.id)}">${content}<span class="c-plus" aria-hidden="true"></span></button>`;
   }).join('');
 }
 
@@ -859,7 +944,7 @@ let reloadTimer = null;
 const authMessage = (msg, cls='') => { const e=$('authMessage'); if(e){e.textContent=msg;e.className='auth-message '+cls;} };
 const appUrl = () => window.location.origin + window.location.pathname;
 const clone = obj => JSON.parse(JSON.stringify(obj));
-const normalizeState = x => ({settings:{seuil:15,...(x?.settings||{})},opps:Array.isArray(x?.opps)?x.opps:[],tasks:Array.isArray(x?.tasks)?x.tasks:[]});
+const normalizeState = x => ({settings:{seuil:15,...(x?.settings||{})},opps:Array.isArray(x?.opps)?x.opps.map(migrateOpp):[],tasks:Array.isArray(x?.tasks)?x.tasks:[]});
 
 function commit(){
   if (!S) return;
@@ -956,6 +1041,11 @@ async function loadFromServer(){
     const timestamps=[...opps,...tasks,...(settings?[settings]:[])].map(x=>x.updated_at).filter(Boolean);
     S.updatedAt = timestamps.length ? timestamps.sort().at(-1) : null;
     persisted={opps:new Map(opps.map(row=>[row.id,{json:JSON.stringify(row.payload),revision:row.revision}])),tasks:new Map(tasks.map(row=>[row.id,{json:JSON.stringify(row.payload),revision:row.revision}])),settings:JSON.stringify(S.settings)};
+    // Migration V2 : les fiches à convertir sont enregistrées une seule fois dans Supabase.
+    const migrated=S.opps.map(migrateOpp);
+    const toSave=migrated.some((o,i)=>JSON.stringify(o)!==JSON.stringify(S.opps[i]));
+    S.opps=migrated;
+    if(toSave){ commit(); toast('Fiches converties au nouveau format (statuts, origine, priorité)'); return; }
     render();
     setSave('',S.updatedAt?'Synchronisé · '+new Date(S.updatedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'Prêt · Aucune donnée');
     alertMsg('');
@@ -1155,30 +1245,38 @@ function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add(
 /* ---------- Fiche opportunité ---------- */
 function readFields(root){
   const out = {};
-  root.querySelectorAll('[name]').forEach(el => { out[el.name] = el.type === 'checkbox' ? el.checked : el.value; });
+  root.querySelectorAll('[name]').forEach(el => {
+    if (el.type === 'radio'){ if (el.checked) out[el.name] = el.value; return; }
+    out[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+  });
   return out;
 }
 let editingOpp = null;
 function openOpp(id){
   const isNew = !id;
-  const o = isNew ? {id:uid('o'), sujet:'', statut:STATUTS[0], type:'Besoin client', details:'', contacts:'', lead:ME, acn:'', montant:'', dateEcrit:'', dateOral:'', dateDecision:'', attente:false} : {...oppById(id)};
+  const o = isNew ? {id:uid('o'), v2:true, sujet:'', statut:STATUTS[0], type:'Besoin client', nature: ui.tab === 'orig' ? 'Origination' : 'Opportunité', priorite:'', details:'', contacts:'', lead:ME, acn:'', montant:'', dateEcrit:'', dateOral:'', dateDecision:'', dateEnvoi:'', datePresentation:'', attente:false} : migrateOpp(oppById(id));
   editingOpp = {o, isNew};
   const autoWait = WAIT.includes(o.statut);
   const d = $('dlgOpp');
   d.innerHTML = `<div id="fOpp">
-    <div class="dlg-head"><h3>${isNew ? 'Nouvelle opportunité' : esc(o.sujet)}</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
+    <div class="dlg-head"><h3>${isNew ? (o.nature === 'Origination' ? 'Nouvelle origination' : 'Nouvelle opportunité') : esc(o.sujet)}</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
     <div class="dlg-body">
       <div class="field full"><label class="lbl" for="f_sujet">Sujet</label><input id="f_sujet" name="sujet" value="${esc(o.sujet)}" required placeholder="Ex. Migration data platform"></div>
-      <div class="field"><label class="lbl" for="f_statut">Statut</label><select id="f_statut" name="statut" class="${o.statut === URGENCE ? 'is-urgence' : ''}">${STATUTS.map(s => `<option ${s === o.statut ? 'selected' : ''} ${s === URGENCE ? 'style="color:#D9432B;font-weight:700"' : ''}>${s}</option>`).join('')}</select></div>
-      <div class="field"><label class="lbl" for="f_type">Origine</label><select id="f_type" name="type">${['Proactive','Besoin client'].map(s => `<option ${s === o.type ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><span class="lbl">Classement</span><div class="radio-line" role="radiogroup" aria-label="Classement">${NATURES.map(n => `<label><input type="radio" name="nature" value="${n}" ${o.nature === n ? 'checked' : ''}>${n}</label>`).join('')}</div></div>
+      <div class="field"><label class="lbl" for="f_prio">Priorité</label><select id="f_prio" name="priorite"><option value="" ${!o.priorite ? 'selected' : ''}>Non définie</option>${PRIORITES.map(p => `<option ${p === o.priorite ? 'selected' : ''}>${p}</option>`).join('')}</select></div>
+      <div class="field"><label class="lbl" for="f_statut">Statut</label><select id="f_statut" name="statut">${statutsFor(o.nature).map(s => `<option ${s === o.statut ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label class="lbl" for="f_type">Origine</label><select id="f_type" name="type">${ORIGINES.map(s => `<option ${s === o.type ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div class="field"><label class="lbl" for="f_lead">Lead local</label><input id="f_lead" name="lead" list="people" value="${esc(o.lead)}"></div>
       <div class="field"><label class="lbl" for="f_montant">Montant estimé</label><input id="f_montant" name="montant" value="${esc(o.montant)}" placeholder="Ex. 500 k€"></div>
       <div class="field"><label class="lbl" for="f_contacts">Contacts Michelin</label><textarea id="f_contacts" name="contacts" placeholder="Un contact par ligne">${esc(o.contacts)}</textarea></div>
       <div class="field"><label class="lbl" for="f_acn">Contacts Accenture et éditeurs</label><textarea id="f_acn" name="acn" placeholder="Un contact par ligne">${esc(o.acn)}</textarea></div>
-      <div class="field full"><label class="lbl" for="f_details">Détails et besoin client</label><textarea id="f_details" name="details">${esc(o.details)}</textarea></div>
-      <div class="field"><label class="lbl" for="f_de">Soumission de l'écrit</label><input type="date" id="f_de" name="dateEcrit" value="${esc(o.dateEcrit)}"></div>
-      <div class="field"><label class="lbl" for="f_do">Oral</label><input type="date" id="f_do" name="dateOral" value="${esc(o.dateOral)}"></div>
-      <div class="field"><label class="lbl" for="f_dd">Décision client</label><input type="date" id="f_dd" name="dateDecision" value="${esc(o.dateDecision)}"></div>
+      <div class="field full"><label class="lbl" for="f_details">Détails du besoin client</label><textarea id="f_details" name="details">${esc(o.details)}</textarea></div>
+      <div class="date-group-title" id="f_dates_title">${o.type === 'RFP' ? 'Dates clés du RFP' : 'Dates clés client'}</div>
+      <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_de">Soumission de l'écrit</label><input type="date" id="f_de" name="dateEcrit" value="${esc(o.dateEcrit)}"></div>
+      <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_do">Oral</label><input type="date" id="f_do" name="dateOral" value="${esc(o.dateOral)}"></div>
+      <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_dd">Décision client</label><input type="date" id="f_dd" name="dateDecision" value="${esc(o.dateDecision)}"></div>
+      <div class="field date-std" ${o.type === 'RFP' ? 'hidden' : ''}><label class="lbl" for="f_den">Date d'envoi proposition client</label><input type="date" id="f_den" name="dateEnvoi" value="${esc(o.dateEnvoi)}"></div>
+      <div class="field date-std" ${o.type === 'RFP' ? 'hidden' : ''}><label class="lbl" for="f_dpr">Présentation au client</label><input type="date" id="f_dpr" name="datePresentation" value="${esc(o.datePresentation)}"></div>
       <div class="field" style="justify-content:flex-end">
         <label class="check-line"><input type="checkbox" name="attente" id="f_attente" ${o.attente || autoWait ? 'checked' : ''} ${autoWait ? 'disabled' : ''}><span>En attente de décision client<br><span class="help" id="f_attente_help">${autoWait ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.'}</span></span></label>
       </div>
@@ -1194,8 +1292,19 @@ function openOpp(id){
   d.showModal();
   if (isNew) $('f_sujet').focus();
 
+  // Le choix Opportunité / Origination change la liste des statuts proposés
+  d.querySelectorAll('input[name=nature]').forEach(r => r.onchange = () => {
+    const nature = d.querySelector('input[name=nature]:checked').value, sel = $('f_statut');
+    const next = fitStatut(sel.value, nature);
+    sel.innerHTML = statutsFor(nature).map(s => `<option ${s === next ? 'selected' : ''}>${s}</option>`).join('');
+  });
+  $('f_type').onchange = e => {
+    const rfp = e.target.value === 'RFP';
+    d.querySelectorAll('.date-rfp').forEach(el => { el.hidden = !rfp; });
+    d.querySelectorAll('.date-std').forEach(el => { el.hidden = rfp; });
+    $('f_dates_title').textContent = rfp ? 'Dates clés du RFP' : 'Dates clés client';
+  };
   $('f_statut').onchange = e => {
-    e.target.classList.toggle('is-urgence', e.target.value === URGENCE);
     const auto = WAIT.includes(e.target.value), cb = $('f_attente');
     cb.disabled = auto; if (auto) cb.checked = true; else cb.checked = !!editingOpp.o.attente;
     $('f_attente_help').textContent = auto ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.';
@@ -1204,8 +1313,10 @@ function openOpp(id){
     const f = readFields($('fOpp'));
     const sujet = String(f.sujet || '').trim();
     if (!sujet){ $('f_sujet').focus(); toast('Indiquez un sujet'); return; }
-    const data = {...o, sujet};
-    ['statut','type','lead','montant','contacts','acn','details','dateEcrit','dateOral','dateDecision'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    const data = {...o, sujet, v2:true};
+    ['statut','type','nature','priorite','lead','montant','contacts','acn','details','dateEcrit','dateOral','dateDecision','dateEnvoi','datePresentation'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    if (!NATURES.includes(data.nature)) data.nature = 'Opportunité';
+    data.statut = fitStatut(data.statut, data.nature);
     const cb = $('f_attente'); data.attente = cb.disabled ? !!o.attente : cb.checked;
     // Identifiants de colonnes stables : un renommage ne modifie jamais les valeurs.
     data.customFields={...(o.customFields||{})};
@@ -1333,7 +1444,7 @@ function openTask(id, oppId){
 }
 
 /* ---------- Slide hebdo ---------- */
-const PROPOSAL = ['Lancer la rédaction','Ecrit en cours','Oral en préparation'];
+const PROPOSAL = ['Réponse écrite','Proposition écrite'];
 function parseMontant(txt){
   const t = String(txt || '').replace(/(\d)[\s\u00a0]+(?=\d{3}\b)/g, '$1');
   const m = t.match(/(\d+(?:[.,]\d+)?)(?:\s*(?:à|a|-|–)\s*(\d+(?:[.,]\d+)?))?\s*(k|K|M)?\s*€/);
@@ -1370,7 +1481,7 @@ function clientNames(list){
 }
 function weeklyData(){
   const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
-  const active = S.opps.filter(o => o.statut !== PERDU);
+  const active = S.opps.filter(o => !CLOSED_LOST.includes(o.statut));
   const lost = S.opps.length - active.length;
   const side = isPro => {
     const list = active.filter(o => (o.type === 'Proactive') === isPro);
@@ -1386,7 +1497,7 @@ function weeklyData(){
     proposals: active.filter(o => PROPOSAL.includes(o.statut)).length,
     attente: active.filter(o => M.get(o.id).attente).length,
     budget, clients: clientNames(active).length, lost,
-    pro: side(true), client: side(false)
+    pro: side(true), client: side(false), rfp: active.filter(o => o.type === 'RFP').length
   };
 }
 const pl = (n, one, many) => Number(n) > 1 ? many : one;
@@ -1400,7 +1511,7 @@ function slideSpec(D){
   T(D.dateLabel, 8.9, 0.4, 3.83, 0.75, {size:14, color:muted, align:'right', valign:'middle'});
   const unpriced = D.budget.unpriced;
   const kpis = [
-    {n:D.proposals, l:pl(D.proposals, 'proposition en cours', 'propositions en cours'), c:'écrit ou oral en préparation', w:2.7, size:44},
+    {n:D.proposals, l:pl(D.proposals, 'proposition en cours', 'propositions en cours'), c:'réponse ou proposition écrite', w:2.7, size:44},
     {n:D.attente, l:pl(D.attente, 'décision attendue', 'décisions attendues'), c:'en attente de décision client', w:2.7, size:44},
     {n:fmtRange(D.budget), l:'budget total estimé', c: unpriced ? `${unpriced} opportunité${unpriced > 1 ? 's' : ''} non chiffrée${unpriced > 1 ? 's' : ''}` : 'toutes les opportunités sont chiffrées', w:3.38, size:26},
     {n:D.clients, l:pl(D.clients, 'client concerné', 'clients concernés'), c:'interlocuteurs Michelin', w:2.45, size:44}
@@ -1415,7 +1526,7 @@ function slideSpec(D){
   });
   const cw = 5.915;
   [[D.pro, 'Proactives', 'Initiées par Accenture', '0B8F70', 'E8F5F0', 0.6],
-   [D.client, 'Besoins client', 'Demandes exprimées par Michelin', '2F6BEA', 'EDF2FE', 0.6 + cw + 0.3]].forEach(([s, title, sub, col, tint, cx]) => {
+   [D.client, D.rfp ? 'Besoins client et RFP' : 'Besoins client', D.rfp ? `Demandes exprimées par Michelin, dont ${D.rfp} RFP` : 'Demandes exprimées par Michelin', '2F6BEA', 'EDF2FE', 0.6 + cw + 0.3]].forEach(([s, title, sub, col, tint, cx]) => {
     R(cx, 3.45, cw, 3.35, tint);
     T(title, cx + 0.3, 3.62, cw - 0.6, 0.45, {size:20, bold:true, color:col});
     T(sub, cx + 0.3, 4.05, cw - 0.6, 0.3, {size:12, color:muted});
@@ -1433,13 +1544,13 @@ function slideSpec(D){
       T(fmtRange(t.m), cx + 3.5, y, cw - 3.8, 0.33, {size:14, bold:true, align:'right', valign:'middle'});
     });
   });
-  T(`Propositions en cours : statuts Lancer la rédaction, Écrit en cours, Oral en préparation. Budget : somme des fourchettes estimées, hors opportunités perdues${D.lost ? ` (${D.lost})` : ''}. Source : dashboard Opportunités FY27.`,
+  T(`Propositions en cours : statuts Réponse écrite et Proposition écrite. Budget : somme des fourchettes estimées, hors opportunités perdues ou annulées${D.lost ? ` (${D.lost})` : ''}. Source : dashboard Opportunités FY27.`,
     0.6, 6.95, 12.13, 0.3, {size:10, color:muted});
   return E;
 }
 function slideNotes(D){
   const line = o => `- ${o.sujet} : ${o.statut}${o.montant ? ', ' + o.montant : ''}`;
-  return `Proactives (${D.pro.n})\n${D.pro.list.map(line).join('\n')}\n\nBesoins client (${D.client.n})\n${D.client.list.map(line).join('\n')}`;
+  return `Proactives (${D.pro.n})\n${D.pro.list.map(line).join('\n')}\n\n${D.rfp ? 'Besoins client et RFP' : 'Besoins client'} (${D.client.n})\n${D.client.list.map(line).join('\n')}`;
 }
 function slideHtml(E){
   const pct = (v, total) => (v / total * 100).toFixed(3) + '%';
@@ -1517,7 +1628,7 @@ function shareFile(){
 /* ---------- Synthèse par personne ---------- */
 function synthData(person){
   const mine = S.tasks.filter(t => t.state !== 'Fait' && splitPeople(t.owner).includes(person))
-    .filter(t => { const o = oppById(t.oppId); return !o || o.statut !== PERDU; })
+    .filter(t => { const o = oppById(t.oppId); return !o || !CLOSED_LOST.includes(o.statut); })
     .sort(sortTasks);
   const late = [], dated = [], doing = [], todo = [];
   mine.forEach(t => {
@@ -1651,7 +1762,7 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-tab],[data-kpi],[data-clear],[data-group],[data-check],[data-cycle],[data-edit-task],[data-edit-opp],[data-new-task-for],[data-synth],[data-open-cols],[data-close]');
   if (!el) return;
   const ds = el.dataset;
-  if (ds.tab){ ui.tab = ds.tab; showTab(); }
+  if (ds.tab){ ui.tab = ds.tab; showTab(); render(); }
   else if (ds.kpi){ ui.kpi = ui.kpi === ds.kpi ? null : ds.kpi; render(); }
   else if ('clear' in ds){ ui.kpi = null; render(); }
   else if (ds.group){ ui.group = ds.group; document.querySelectorAll('[data-group]').forEach(b => b.setAttribute('aria-pressed', b.dataset.group === ui.group)); render(); }
@@ -1679,12 +1790,15 @@ $('dlgOpp').addEventListener('close', () => { editingOpp = null; });
 
 function showTab(){
   document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === ui.tab));
-  $('panel-opps').classList.toggle('is-hidden', ui.tab !== 'opps');
+  $('panel-opps').classList.toggle('is-hidden', ui.tab === 'tasks');
   $('panel-tasks').classList.toggle('is-hidden', ui.tab !== 'tasks');
+  $('oppTitle').textContent = ui.tab === 'orig' ? 'Origination' : 'Opportunités';
+  $('panel-opps').setAttribute('aria-labelledby', ui.tab === 'orig' ? 'tab-orig' : 'tab-opps');
 }
 document.querySelector('.tabs').addEventListener('keydown', e => {
   if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-  ui.tab = ui.tab === 'opps' ? 'tasks' : 'opps'; showTab(); $('tab-' + ui.tab).focus();
+  const order = ['opps','orig','tasks'], i = order.indexOf(ui.tab);
+  ui.tab = order[(i + (e.key === 'ArrowRight' ? 1 : order.length - 1)) % order.length]; showTab(); render(); $('tab-' + ui.tab).focus();
 });
 
 window.addEventListener('error', e => {
