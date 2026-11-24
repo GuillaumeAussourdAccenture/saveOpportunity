@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27 — V1.4</title><style>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27 — V1.5</title><style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 :root{
   --paper:#F4F3F8;--surface:#FFFFFF;--ink:#231C3A;--muted:#6E6886;--line:#E3E0EC;--soft:#EEECF4;
@@ -44,7 +44,7 @@ h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
 .btn.danger.armed{background:var(--k-deadline);border-color:var(--k-deadline);color:#fff}
 
 /* Indicateurs */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px}
 .kpi{font:inherit;color:inherit;text-align:left;background:var(--surface);border:0;cursor:pointer;padding:20px 20px 18px;position:relative;display:flex;flex-direction:column;gap:5px}
 .kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
 .kpi:hover{background:color-mix(in srgb,var(--soft) 70%,var(--surface))}
@@ -120,7 +120,7 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 
 /* Colonnes ajoutables : une grille unique pour l'en-tête et les lignes. */
 .opp-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
-.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) 150px 80px minmax(0,1.1fr) minmax(0,.9fr) 60px 92px 32px);gap:16px;align-items:center}
+.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) minmax(0,.9fr) 150px 80px minmax(0,1.1fr) minmax(0,.9fr) 92px 96px 74px 32px);gap:16px;align-items:center}
 .opp-table.has-custom .opp,.opp-table.has-custom .opp-cols{min-width:var(--opp-min-width)}
 .opp-cols{font-size:12.5px;font-weight:600;color:var(--muted);padding:0 0 8px;border-bottom:1px solid var(--line)}
 .opp-cols .c-date{text-align:right}
@@ -140,10 +140,10 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 
 .add-col-btn{display:grid;place-items:center;width:29px;height:29px;padding:0;border:1px dashed var(--violet);border-radius:9px;background:color-mix(in srgb,var(--violet) 9%,var(--surface));color:var(--violet);font:inherit;font-size:22px;line-height:1;cursor:pointer}
 .add-col-btn:hover,.add-col-btn:focus-visible{background:var(--violet);color:var(--on-violet)}
-.opp-head-actions{display:flex;align-items:center;gap:8px}
+.opp-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:100%}
 .opp-head-actions input{max-width:min(260px,calc(100vw - 110px))}
 .mobile-col-btn{display:none}
-@media(max-width:560px){.mobile-col-btn{display:grid}}
+@media(max-width:560px){.mobile-col-btn{display:grid}.opp-head-actions input{width:min(220px,calc(100vw - 95px))}.period-filter{max-width:100%}}
 /* les titres personnalisés utilisent aussi .col-head */
 .col-title{min-width:0;max-width:100%;font:inherit;font-weight:600;text-align:left;border:0;background:transparent;color:var(--muted);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px 0}
 .col-title:hover{color:var(--violet);text-decoration:underline;text-underline-offset:2px}
@@ -178,6 +178,16 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 select.is-urgence{color:var(--k-deadline);font-weight:700;background:color-mix(in srgb,var(--k-deadline) 10%,var(--paper));border-color:color-mix(in srgb,var(--k-deadline) 40%,transparent)}
 .stage .perdu{align-self:flex-start;font-size:12px;font-weight:700;color:var(--muted);background:var(--soft);border:1px solid var(--line);padding:3px 9px;border-radius:8px;line-height:1.3}
 .stage .perdu{white-space:normal !important;overflow:visible !important;line-height:1.3}
+.ent-cell{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.ent-tag{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--soft);color:var(--ink);border:1px solid var(--line);white-space:nowrap}
+.ent-line{display:flex;flex-wrap:wrap;gap:8px;padding:2px 0}
+.ent{position:relative;cursor:pointer}
+.ent input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.ent span{display:inline-block;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--muted)}
+.ent input:checked + span{background:var(--violet);border-color:var(--violet);color:var(--on-violet)}
+.ent input:focus-visible + span{outline:2px solid var(--violet);outline-offset:2px}
+.qtr{justify-self:start;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;color:var(--violet);background:color-mix(in srgb,var(--violet) 12%,transparent)}
+.period-filter{max-width:min(230px,100%)}
 .prio{justify-self:start;display:inline-grid;place-items:center;min-width:32px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .prio.p1{color:#fff;background:var(--k-deadline);border-color:var(--k-deadline)}
 .prio.p2{color:#8A5A00;background:#FFF1D6;border-color:#F3D08A}
@@ -270,14 +280,13 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .kpi-num{font-size:46px}
 }
 @media (max-width:980px){
-  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) 130px 72px minmax(0,1fr) 56px 88px 32px}
+  .opp-table:not(.has-custom) .opp,.opp-table:not(.has-custom) .opp-cols{grid-template-columns:minmax(0,1.6fr) minmax(0,1.4fr) minmax(0,.8fr) 130px 72px minmax(0,1fr) 88px 90px 66px 32px}
   .opp-table:not(.has-custom) .opp .c-montant,.opp-table:not(.has-custom) .opp-cols .c-montant{display:none}
 }
 @media (max-width:560px){
   .wrap{padding:18px 14px 40px}
   h1{font-size:28px}
   .kpis{grid-template-columns:repeat(2,1fr)}
-  .kpi:last-child{grid-column:1/-1}
   .kpi{padding:16px 16px 14px}
   .kpi-num{font-size:42px}
   .kpi-rule{display:none}
@@ -298,7 +307,6 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
   .panel,.kpis{border-color:#ccc}
 }
 </style>
-<!-- V1.4 = évolutions métier du fichier joint + colonnes dynamiques et déplaçables V1.3 -->
 <!-- ============================================================
      RÉGLAGES SUPABASE : à renseigner par la personne qui héberge
      le dashboard (Supabase > Project Settings > API).
@@ -372,7 +380,7 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
     <section class="panel" id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
       <div class="panel-head">
         <h2 id="oppTitle">Opportunités</h2>
-        <div class="opp-head-actions"><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols="" title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
+        <div class="opp-head-actions"><select class="small period-filter" id="periodFilter" aria-label="Filtrer par mois ou par quarter"></select><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols="" title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
       </div>
       <p class="hint">Triées par date clé client la plus proche (RFP : écrit, oral, décision ; autres : envoi de la proposition, présentation). Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ».</p>
       <div class="opp-table" id="oppTable" aria-label="Tableau des opportunités (défilement horizontal si nécessaire)">
@@ -410,6 +418,7 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 <input type="file" id="fileImport" accept="application/json,.json" hidden="">
 <div class="toast" id="toast" role="status"></div>
 <datalist id="people"></datalist>
+
 <script>
 const KEY = 'opportunites-fy27-dashboard';
 // Copie intacte de la page, pour fabriquer la version à partager
@@ -424,11 +433,11 @@ let ME = ''; // Nom du membre connecté, renseigné après validation du compte 
 // V2 : référentiels des fiches
 // Statuts selon le classement de la fiche
 const STATUTS_OPP = ['À qualifier','Réponse écrite','Gagnée','Perdue','Annulée - décision client','Annulée - décision ACN'];
-const STATUTS_ORIG = ['À qualifier','Proposition écrite'];
+const STATUTS_ORIG = STATUTS_OPP; // V3 : même liste pour l'origination
 const STATUTS = [...new Set([...STATUTS_OPP, ...STATUTS_ORIG])];
 const statutsFor = nature => nature === 'Origination' ? STATUTS_ORIG : STATUTS_OPP;
 // Étapes de la barre de progression (les statuts de clôture s'affichent à part)
-const stagesFor = nature => nature === 'Origination' ? STATUTS_ORIG : ['À qualifier','Réponse écrite','Gagnée'];
+const stagesFor = nature => ['À qualifier','Réponse écrite','Gagnée'];
 const STAGES = stagesFor('Opportunité');
 const STEPS = STAGES.length;
 const URGENCE = 'Urgence non prévue détectée'; // ancien statut, n'est plus proposé
@@ -438,10 +447,32 @@ const CLOSED_LOST = [PERDU, ...ANNULE];
 const WON = ['Gagnée'];
 const WAIT = []; // l'attente de décision client se coche désormais dans la fiche
 // Statut à reprendre quand le classement change (ou pour une valeur inconnue)
+const ENTITES = ['BS.RD','BS.IMF','DO.RD','DO.MF','EC','ES','SC','SMI','IN'];
+const MONTHS = Array.from({length:12}, (_, i) => {
+  const d = new Date(Date.UTC(2026, 8 + i, 1));
+  const long = d.toLocaleDateString('fr-FR', {month:'long', year:'numeric', timeZone:'UTC'});
+  return {v:d.toISOString().slice(0, 7), long:long.charAt(0).toUpperCase() + long.slice(1),
+          short:d.toLocaleDateString('fr-FR', {month:'short', year:'numeric', timeZone:'UTC'}), q:'Q' + (Math.floor(i / 3) + 1)};
+});
+const QUARTERS = [{v:'Q1', label:'Q1 : septembre à novembre 2026'}, {v:'Q2', label:'Q2 : décembre 2026 à février 2027'},
+                  {v:'Q3', label:'Q3 : mars à mai 2027'}, {v:'Q4', label:'Q4 : juin à août 2027'}];
+const monthInfo = v => MONTHS.find(m => m.v === v);
+// Mois automatique : celui de la date de soumission de la proposition
+// (RFP : soumission de l'écrit ; autres origines : date d'envoi de la proposition client).
+const submitField = o => o && o.type === 'RFP' ? 'dateEcrit' : 'dateEnvoi';
+const submitLabel = type => type === 'RFP' ? "la date de soumission de l'écrit" : "la date d'envoi de la proposition";
+const monthFromDate = iso => { const s = String(iso || ''); if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return ''; const dt = new Date(s+'T00:00:00Z'); if (Number.isNaN(dt.getTime()) || dt.toISOString().slice(0,10) !== s) return ''; const m=s.slice(0,7); return monthInfo(m)?m:''; };
+const autoMonth = o => monthFromDate(o && o[submitField(o)]);
+const effMonth = o => autoMonth(o);
+const quarterOf = o => (monthInfo(effMonth(o)) || {}).q || '';
+function periodOk(o){
+  const p = ui.period; if (!p) return true;
+  return /^Q\d$/.test(p) ? quarterOf(o) === p : effMonth(o) === p;
+}
+function periodLabel(p){ const q = QUARTERS.find(x => x.v === p); return q ? q.v : (monthInfo(p) || {}).long || ''; }
 function fitStatut(statut, nature){
-  if (statutsFor(nature).includes(statut)) return statut;
-  if (nature === 'Origination') return statut === 'Réponse écrite' ? 'Proposition écrite' : 'À qualifier';
-  return statut === 'Proposition écrite' ? 'Réponse écrite' : 'À qualifier';
+  const canonical = statut === 'Proposition écrite' ? 'Réponse écrite' : statut;
+  return statutsFor(nature).includes(canonical) ? canonical : 'À qualifier';
 }
 const ORIGINES = ['Proactive','Besoin client','RFP'];
 const NATURES = ['Opportunité','Origination'];
@@ -471,9 +502,11 @@ function migrateOpp(o){
   if (!NATURES.includes(x.nature)) x.nature = 'Opportunité';
   // « En attente du résultat » (première V2) devient « Réponse écrite » + case d'attente cochée
   if (x.statut === 'En attente du résultat'){ x.statut = 'Réponse écrite'; x.attente = true; }
+  if (x.statut === 'Proposition écrite' && !x.statutAvant) x.statutAvant = x.statut;
   x.statut = fitStatut(x.statut, x.nature);
   if (!ORIGINES.includes(x.type)) x.type = 'Besoin client';
   if (!PRIORITES.includes(x.priorite)) x.priorite = '';
+  if ('entites' in x) x.entites = Array.isArray(x.entites) ? [...new Set(x.entites.filter(e => ENTITES.includes(e)))]: [];
   return x;
 }
 const STATES = ['À lancer','En cours','Fait'];
@@ -482,12 +515,14 @@ const COL_TYPES = {text:'Texte',number:'Nombre',date:'Date',boolean:'Oui / Non'}
 const BASE_COLS = [
   {id:'sujet',label:'Sujet',width:'minmax(155px,1.7fr)'},
   {id:'contacts',label:'Contacts Michelin',width:'minmax(145px,1.5fr)'},
+  {id:'entites',label:'Entités',width:'minmax(110px,.9fr)'},
   {id:'statut',label:'Statut',width:'130px'},
   {id:'priorite',label:'Priorité',width:'80px'},
   {id:'lead',label:'Lead local',width:'minmax(115px,1.1fr)'},
   {id:'montant',label:'Montant estimé',width:'minmax(105px,.9fr)'},
-  {id:'tasks',label:'Tâches',width:'54px'},
-  {id:'clientDate',label:'Date clé client',width:'100px'}
+  {id:'clientDate',label:'Date clé client',width:'100px'},
+  {id:'mois',label:'Mois',width:'96px'},
+  {id:'quarter',label:'Quarter',width:'74px'}
 ];
 function defaultColumns(){
   return [...BASE_COLS,...customColumns().map(c=>({id:c.id,label:c.label,width:'minmax(160px,1fr)',type:c.type,isCustom:true}))];
@@ -571,7 +606,6 @@ function customFieldsHtml(o){
 }
 
 const KPIS = [
-  {k:'attente',  label:"Attente de décision client", c:'var(--k-attente)'},
   {k:'deadline', label:'Deadline proche',        c:'var(--k-deadline)'},
   {k:'gagne',    label:'Gagnées',                c:'var(--k-proactif)'},
   {k:'perdu',    label:'Perdues',                c:'var(--muted)'},
@@ -582,7 +616,7 @@ const SEED = {settings:{seuil:15},opps:[],tasks:[]};
 
 /* ---------- État ---------- */
 let S = null;
-const ui = {tab:'opps', kpi:null, group:'person', showDone:false, person:'', q:''};
+const ui = {tab:'opps', kpi:null, group:'person', showDone:false, person:'', q:'', period:''};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
@@ -633,7 +667,7 @@ function render(){
 
 // Les indicateurs portent sur l'onglet affiché : Opportunités, Origination, ou tout (onglet Tâches).
 function scopeNature(){ return ui.tab === 'orig' ? 'Origination' : ui.tab === 'opps' ? 'Opportunité' : null; }
-function scopeOpps(){ const n = scopeNature(); return n ? S.opps.filter(o => o.nature === n) : S.opps; }
+function scopeOpps(){ const n = scopeNature(); return (n ? S.opps.filter(o => o.nature === n) : S.opps).filter(periodOk); }
 function renderKpis(M){
   const scope = scopeOpps();
   $('kpis').innerHTML = KPIS.map(K => {
@@ -649,7 +683,7 @@ function renderKpis(M){
 function renderFilter(){
   const K = KPIS.find(x => x.k === ui.kpi);
   const n = scopeNature();
-  const scope = `<span class="scope">Indicateurs : <b>${n === 'Origination' ? 'Origination' : n ? 'Opportunités' : 'Opportunités et origination'}</b></span>`;
+  const scope = `<span class="scope">Indicateurs : <b>${n === 'Origination' ? 'Origination' : n ? 'Opportunités' : 'Opportunités et origination'}${ui.period ? ', ' + esc(periodLabel(ui.period)) : ''}</b></span>`;
   $('filterbar').innerHTML = scope + (K
     ? `<span class="chip" style="--c:${K.c}">Filtre : <b>${K.label.toLowerCase()}</b><button data-clear>Retirer le filtre</button></span>`
     : `<span>Cliquez sur un indicateur pour filtrer la liste et les tâches.</span>`);
@@ -689,7 +723,7 @@ function sortTasks(a,b){
 
 function renderTasks(M){
   const ids = visibleOppIds(M);
-  let list = S.tasks.filter(t => ids.has(t.oppId) || !oppById(t.oppId));
+  let list = S.tasks.filter(t => ids.has(t.oppId) || (!ui.period && !oppById(t.oppId)));
   if (!ui.showDone) list = list.filter(t => t.state !== 'Fait');
   if (ui.person) list = list.filter(t => ui.person === '__none' ? splitPeople(t.owner).length === 0 : splitPeople(t.owner).includes(ui.person));
   list.sort(sortTasks);
@@ -781,7 +815,7 @@ function renderOppColumns(){
   box.classList.toggle('has-custom',wide);
   if(wide){
     box.style.setProperty('--opp-grid',cols.map(c=>c.width).join(' ')+' 32px');
-    box.style.setProperty('--opp-min-width',(1080+added.length*160)+'px');
+    box.style.setProperty('--opp-min-width',(1320+added.length*160)+'px');
   }else{
     box.style.removeProperty('--opp-grid');
     box.style.removeProperty('--opp-min-width');
@@ -790,7 +824,7 @@ function renderOppColumns(){
     const label=c.isCustom
       ? `<button type="button" class="col-title" data-open-cols title="Gérer la colonne ${esc(c.label)}">${esc(c.label)}</button>`
       : `<span class="col-label">${esc(c.label)}</span>`;
-    return `<div class="col-head ${c.id==='clientDate'?'c-date':''}" data-col-key="${esc(c.id)}">
+    return `<div class="col-head ${c.id==='clientDate'?'c-date':''} ${c.id==='montant'?'c-montant':''}" data-col-key="${esc(c.id)}">
       <button type="button" class="col-grip" data-drag-col="${esc(c.id)}" aria-label="Déplacer la colonne ${esc(c.label)}" title="Maintenir et glisser pour déplacer la colonne (ou utiliser les flèches dans +)"><span aria-hidden="true">⠿</span></button>${label}</div>`;
   }).join('')+'<span class="c-plus"><button type="button" class="add-col-btn" data-open-cols title="Ajouter ou gérer des colonnes" aria-label="Ajouter ou gérer des colonnes">+</button></span>';
 }
@@ -799,10 +833,10 @@ function renderOpps(M){
   const ids=visibleOppIds(M);
   const q=ui.q.trim().toLowerCase();
   const cols=displayColumns();
-  const list=oppOrder(M).filter(o=>ids.has(o.id)).filter(o=>!q||[o.sujet,o.lead,o.contacts,o.acn,o.details,...customColumns().map(c=>o.customFields?.[c.id]||'')].join(' ').toLowerCase().includes(q));
+  const list=oppOrder(M).filter(o=>ids.has(o.id)).filter(o=>!q||[o.sujet,o.lead,o.contacts,o.acn,o.details,o.commentaire,(o.entites||[]).join(' '),...customColumns().map(c=>o.customFields?.[c.id]||'')].join(' ').toLowerCase().includes(q));
   const kpiOk=o=>!ui.kpi||M.get(o.id)[ui.kpi];
-  $('oppCount').textContent=S.opps.filter(o=>o.nature==='Opportunité'&&kpiOk(o)).length;
-  $('origCount').textContent=S.opps.filter(o=>o.nature==='Origination'&&kpiOk(o)).length;
+  $('oppCount').textContent=S.opps.filter(o=>o.nature==='Opportunité'&&kpiOk(o)&&periodOk(o)).length;
+  $('origCount').textContent=S.opps.filter(o=>o.nature==='Origination'&&kpiOk(o)&&periodOk(o)).length;
   if(!list.length){$('oppList').innerHTML=`<p class="empty">${ui.tab==='orig'?'Aucune origination':'Aucune opportunité'} ne correspond. Modifiez la recherche, retirez le filtre ou cochez « ${ui.tab==='orig'?'Origination':'Opportunité'} » dans une fiche.</p>`;return;}
   $('oppList').innerHTML=list.map(o=>{
     const open=S.tasks.filter(t=>t.oppId===o.id&&t.state!=='Fait').length;
@@ -816,12 +850,14 @@ function renderOpps(M){
     const cells={
       sujet:`<div class="c-sujet" style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>`,
       contacts:`<span class="cell clients ${clients?'':'muted'}" title="${esc(clients)}">${esc(clients||'À identifier')}</span>`,
+      entites:(o.entites||[]).length?`<span class="ent-cell" title="${esc(o.entites.join(', '))}">${o.entites.map(e=>`<span class="ent-tag">${esc(e)}</span>`).join('')}</span>`:'<span class="cell muted">—</span>',
       statut:stageHtml(o.statut, o.nature),
       priorite:o.priorite?`<span class="prio ${o.priorite.toLowerCase()}" title="Priorité ${esc(o.priorite)}">${esc(o.priorite)}</span>`:'<span class="cell muted" title="Priorité non définie">—</span>',
       lead:`<span class="cell ${o.lead?'':'muted'}" title="${esc(o.lead)}">${esc(o.lead||'À définir')}</span>`,
       montant:`<span class="cell c-montant ${o.montant?'':'muted'}" title="${esc(o.montant)}">${esc(o.montant||'À chiffrer')}</span>`,
-      tasks:`<span class="ntasks ${open?'':'zero'}" title="Tâches ouvertes">${open}</span>`,
-      clientDate:`<div class="c-date">${date}</div>`
+      clientDate:`<div class="c-date">${date}</div>`,
+      mois:effMonth(o)?`<span class="cell" title="Déduit de ${submitLabel(o.type)}">${esc(monthInfo(effMonth(o)).short)}</span>`:'<span class="cell muted">—</span>',
+      quarter:quarterOf(o)?`<span class="qtr">${quarterOf(o)}</span>`:'<span class="cell muted">—</span>'
     };
     const content=cols.map(c=>{
       if(!c.isCustom)return cells[c.id];
@@ -1266,11 +1302,13 @@ function openOpp(id){
       <div class="field"><label class="lbl" for="f_prio">Priorité</label><select id="f_prio" name="priorite"><option value="" ${!o.priorite ? 'selected' : ''}>Non définie</option>${PRIORITES.map(p => `<option ${p === o.priorite ? 'selected' : ''}>${p}</option>`).join('')}</select></div>
       <div class="field"><label class="lbl" for="f_statut">Statut</label><select id="f_statut" name="statut">${statutsFor(o.nature).map(s => `<option ${s === o.statut ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div class="field"><label class="lbl" for="f_type">Origine</label><select id="f_type" name="type">${ORIGINES.map(s => `<option ${s === o.type ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field full"><span class="lbl">Entités</span><div class="ent-line" role="group" aria-label="Entités">${ENTITES.map(e => `<label class="ent"><input type="checkbox" data-ent value="${e}" ${(o.entites || []).includes(e) ? 'checked' : ''}><span>${e}</span></label>`).join('')}</div></div>
       <div class="field"><label class="lbl" for="f_lead">Lead local</label><input id="f_lead" name="lead" list="people" value="${esc(o.lead)}"></div>
       <div class="field"><label class="lbl" for="f_montant">Montant estimé</label><input id="f_montant" name="montant" value="${esc(o.montant)}" placeholder="Ex. 500 k€"></div>
       <div class="field"><label class="lbl" for="f_contacts">Contacts Michelin</label><textarea id="f_contacts" name="contacts" placeholder="Un contact par ligne">${esc(o.contacts)}</textarea></div>
       <div class="field"><label class="lbl" for="f_acn">Contacts Accenture et éditeurs</label><textarea id="f_acn" name="acn" placeholder="Un contact par ligne">${esc(o.acn)}</textarea></div>
       <div class="field full"><label class="lbl" for="f_details">Détails du besoin client</label><textarea id="f_details" name="details">${esc(o.details)}</textarea></div>
+      <div class="field full"><label class="lbl" for="f_comment">Commentaire</label><textarea id="f_comment" name="commentaire" placeholder="Point d'étape, remarque, prochaine étape…">${esc(o.commentaire || '')}</textarea></div>
       <div class="date-group-title" id="f_dates_title">${o.type === 'RFP' ? 'Dates clés du RFP' : 'Dates clés client'}</div>
       <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_de">Soumission de l'écrit</label><input type="date" id="f_de" name="dateEcrit" value="${esc(o.dateEcrit)}"></div>
       <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_do">Oral</label><input type="date" id="f_do" name="dateOral" value="${esc(o.dateOral)}"></div>
@@ -1314,7 +1352,8 @@ function openOpp(id){
     const sujet = String(f.sujet || '').trim();
     if (!sujet){ $('f_sujet').focus(); toast('Indiquez un sujet'); return; }
     const data = {...o, sujet, v2:true};
-    ['statut','type','nature','priorite','lead','montant','contacts','acn','details','dateEcrit','dateOral','dateDecision','dateEnvoi','datePresentation'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    ['statut','type','nature','priorite','lead','montant','contacts','acn','details','commentaire','dateEcrit','dateOral','dateDecision','dateEnvoi','datePresentation'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    data.entites = [...d.querySelectorAll('input[data-ent]:checked')].map(x => x.value);
     if (!NATURES.includes(data.nature)) data.nature = 'Opportunité';
     data.statut = fitStatut(data.statut, data.nature);
     const cb = $('f_attente'); data.attente = cb.disabled ? !!o.attente : cb.checked;
@@ -1786,6 +1825,9 @@ $('alertBackup').onclick = () => download(`sauvegarde_opportunites_${stamp()}.js
 $('showDone').onchange = e => { ui.showDone = e.target.checked; render(); };
 $('personFilter').onchange = e => { ui.person = e.target.value; render(); };
 $('search').oninput = e => { ui.q = e.target.value; render(); };
+$('periodFilter').innerHTML = '<option value="">Toutes les périodes</option>' + QUARTERS.map(q =>
+  `<option value="${q.v}">${q.label}</option>` + MONTHS.filter(m => m.q === q.v).map(m => `<option value="${m.v}">\u00a0\u00a0\u00a0${m.long}</option>`).join('')).join('');
+$('periodFilter').onchange = e => { ui.period = e.target.value; render(); };
 $('dlgOpp').addEventListener('close', () => { editingOpp = null; });
 
 function showTab(){
