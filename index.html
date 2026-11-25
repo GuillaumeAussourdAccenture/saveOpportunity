@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27 — V1.5</title><style>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opportunités FY27 - V1.6</title><style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 :root{
   --paper:#F4F3F8;--surface:#FFFFFF;--ink:#231C3A;--muted:#6E6886;--line:#E3E0EC;--soft:#EEECF4;
@@ -120,8 +120,32 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 
 /* Colonnes ajoutables : une grille unique pour l'en-tête et les lignes. */
 .opp-table{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
-.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,1.7fr) minmax(0,1.5fr) minmax(0,.9fr) 150px 80px minmax(0,1.1fr) minmax(0,.9fr) 92px 96px 74px 32px);gap:16px;align-items:center}
+.opp,.opp-cols{display:grid;grid-template-columns:var(--opp-grid,minmax(0,2.4fr) minmax(0,1.5fr) minmax(0,.9fr) 150px 80px minmax(0,1.1fr) minmax(0,.9fr) 92px 96px 74px 32px);gap:16px;align-items:center}
 .opp-table.has-custom .opp,.opp-table.has-custom .opp-cols{min-width:var(--opp-min-width)}
+/* V4 : le tableau défile dans son cadre (barre horizontale toujours visible à l'écran),
+   les en-têtes restent en haut et la colonne Sujet reste à gauche. */
+.opp-table.has-custom{max-height:calc(100vh - 150px);overflow:auto;overscroll-behavior:contain;border-top:1px solid var(--line)}
+.opp-table.has-custom .opp{margin:0;width:auto}
+.opp-table.has-custom .opp-cols{position:sticky;top:0;z-index:4;background:var(--surface);padding:10px 10px 8px}
+.opp-table.has-custom .opp .c-sujet,.opp-table.has-custom .opp-cols > [data-col-key="sujet"]{position:sticky;left:0;z-index:2;background:var(--surface);box-shadow:10px 0 10px -10px rgba(25,14,55,.25),inset 0 -1px 0 var(--soft)}
+.opp-table.has-custom .opp .c-sujet{align-self:stretch;display:flex;flex-direction:column;justify-content:center;margin:-12px 0 -12px -10px;padding:12px 0 12px 10px}
+.opp-table.has-custom .opp-cols > [data-col-key="sujet"]{z-index:5;margin-left:-10px;padding-left:10px;align-self:stretch;display:flex;align-items:center}
+.opp-table.has-custom .opp:hover .c-sujet{background:var(--soft)}
+/* L'en-tête du panneau (titre, flèches, période, recherche) reste visible en haut de l'écran */
+#panel-opps .panel-head{position:sticky;top:0;z-index:6;background:var(--surface);margin:-8px -22px 0;padding:8px 22px 10px;border-radius:20px 20px 0 0}
+@media (max-width:560px){#panel-opps .panel-head{margin:-6px -16px 0;padding:6px 16px 8px}}
+.c-next{min-width:0}.c-next .odate{text-align:left}
+.rdv-todo{display:inline-block;font-size:12px;font-weight:700;color:var(--k-deadline);background:color-mix(in srgb,var(--k-deadline) 10%,transparent);border:1px solid color-mix(in srgb,var(--k-deadline) 35%,transparent);padding:2px 9px;border-radius:999px;white-space:nowrap}
+.aide-tag{justify-self:start;font-size:12px;font-weight:700;color:#8A5A00;background:#FFF1D6;border:1px solid #F3D08A;padding:2px 10px;border-radius:999px}
+@media (prefers-color-scheme:dark){.aide-tag{color:#FFD58A;background:#3A2E14;border-color:#6B5320}}
+.slide-label{font-size:13px;font-weight:700;color:var(--muted);margin:16px 0 6px}
+.slide-label:first-of-type{margin-top:0}
+.scroll-spacer{pointer-events:none;min-width:0}
+.hscroll{display:inline-flex;gap:4px}
+.hscroll[hidden]{display:none}
+.hscroll button{font:inherit;font-size:13px;font-weight:700;width:34px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.hscroll button:hover{border-color:var(--muted)}
+.hscroll button:disabled{opacity:.4;cursor:default}
 .opp-cols{font-size:12.5px;font-weight:600;color:var(--muted);padding:0 0 8px;border-bottom:1px solid var(--line)}
 .opp-cols .c-date{text-align:right}
 
@@ -166,7 +190,7 @@ select.small,input.small{padding:6px 10px;font-size:13px}
 .opp:hover{background:var(--soft)}
 .opp + .opp{box-shadow:0 -1px 0 var(--soft)}
 .opp:hover + .opp,.opp:hover{box-shadow:none}
-.opp-name{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opp-name{font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;overflow-wrap:anywhere}
 .opp-sub{font-size:12.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stage{display:flex;flex-direction:column;gap:5px;min-width:0}
 .meter{display:flex;gap:2px}
@@ -314,7 +338,7 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
      par les règles de sécurité (RLS) de la base.
      ============================================================ -->
 <script>
-  // V1.4 : paramètres publics déjà employés par la V1.3.
+  // V1.6 : paramètres publics déjà employés par la V1.3.
   // Ne jamais ajouter ici de clé sb_secret_ ou service_role.
   window.DASH_SUPABASE_URL = 'https://kbupzecuqcnauzaojgfd.supabase.co';
   window.DASH_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_6IGWGFVWTLKQxGHtIMjtVQ_7Wf8olK8';
@@ -380,9 +404,9 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
     <section class="panel" id="panel-opps" role="tabpanel" aria-labelledby="tab-opps">
       <div class="panel-head">
         <h2 id="oppTitle">Opportunités</h2>
-        <div class="opp-head-actions"><select class="small period-filter" id="periodFilter" aria-label="Filtrer par mois ou par quarter"></select><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols="" title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
+        <div class="opp-head-actions"><span class="hscroll" id="hscroll" hidden><button type="button" data-hscroll="-1" aria-label="Voir les colonnes précédentes" title="Colonnes précédentes">◀</button><button type="button" data-hscroll="1" aria-label="Voir les colonnes suivantes" title="Colonnes suivantes">▶</button></span><select class="small period-filter" id="periodFilter" aria-label="Filtrer par mois ou par quarter"></select><input class="small" type="search" id="search" placeholder="Rechercher un sujet, une personne" aria-label="Rechercher une opportunité"><button type="button" class="add-col-btn mobile-col-btn" data-open-cols="" title="Ajouter une colonne" aria-label="Ajouter une colonne">+</button></div>
       </div>
-      <p class="hint">Triées par date clé client la plus proche (RFP : écrit, oral, décision ; autres : envoi de la proposition, présentation). Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ».</p>
+      <p class="hint">Triées par date clé client la plus proche (RFP : écrit, oral, décision ; autres : envoi de la proposition, présentation). Cliquez sur une ligne pour modifier sa fiche ; <b>glissez la poignée ⠿ d’un en-tête pour déplacer sa colonne</b>, ou utilisez les flèches dans « + ». Pour voir les autres colonnes, utilisez les flèches <b>◀ ▶</b> : la colonne Sujet et les en-têtes restent affichés.</p>
       <div class="opp-table" id="oppTable" aria-label="Tableau des opportunités (défilement horizontal si nécessaire)">
         <div class="opp-cols" id="oppCols" aria-label="En-têtes de colonnes déplaçables"></div>
         <div id="oppList"></div>
@@ -418,7 +442,6 @@ body.share-mode #authGate,body.share-mode #btnAccess,body.share-mode #btnLogout{
 <input type="file" id="fileImport" accept="application/json,.json" hidden="">
 <div class="toast" id="toast" role="status"></div>
 <datalist id="people"></datalist>
-
 <script>
 const KEY = 'opportunites-fy27-dashboard';
 // Copie intacte de la page, pour fabriquer la version à partager
@@ -510,10 +533,10 @@ function migrateOpp(o){
   return x;
 }
 const STATES = ['À lancer','En cours','Fait'];
-const COL_TYPES = {text:'Texte',number:'Nombre',date:'Date',boolean:'Oui / Non'};
+const COL_TYPES = {text:'Texte',number:'Nombre',date:'Date',boolean:'Oui / Non / Non applicable'};
 // Clés stables : l'ordre n'affecte jamais les données ni les champs Supabase.
 const BASE_COLS = [
-  {id:'sujet',label:'Sujet',width:'minmax(155px,1.7fr)'},
+  {id:'sujet',label:'Sujet',width:'minmax(250px,2.4fr)'},
   {id:'contacts',label:'Contacts Michelin',width:'minmax(145px,1.5fr)'},
   {id:'entites',label:'Entités',width:'minmax(110px,.9fr)'},
   {id:'statut',label:'Statut',width:'130px'},
@@ -522,8 +545,15 @@ const BASE_COLS = [
   {id:'montant',label:'Montant estimé',width:'minmax(105px,.9fr)'},
   {id:'clientDate',label:'Date clé client',width:'100px'},
   {id:'mois',label:'Mois',width:'96px'},
-  {id:'quarter',label:'Quarter',width:'74px'}
+  {id:'quarter',label:'Quarter',width:'74px'},
+  {id:'prochainEchange',label:'Prochain échange',width:'150px',tab:'orig'},
+  {id:'besoinAide',label:'Besoin d’aide',width:'104px',tab:'opps'}
 ];
+// Colonnes propres à un onglet : « Prochain échange » (Origination), « Besoin d'aide » (Opportunités)
+function visibleColumns(){
+  const tab = ui.tab === 'orig' ? 'orig' : 'opps';
+  return displayColumns().filter(c => !c.tab || c.tab === tab);
+}
 function defaultColumns(){
   return [...BASE_COLS,...customColumns().map(c=>({id:c.id,label:c.label,width:'minmax(160px,1fr)',type:c.type,isCustom:true}))];
 }
@@ -547,17 +577,23 @@ function isDefaultColumnOrder(){
 function moveColumnBefore(movedId,beforeId){
   if(fromShare || !signedInUser || !S) return false;
   const current=displayColumns().map(c=>c.id);
-  if(!current.includes(movedId)|| (beforeId!==null && !current.includes(beforeId)) || movedId===beforeId) return false;
+  const visible=visibleColumns().map(c=>c.id);
+  if(!visible.includes(movedId) || (beforeId!==null && !visible.includes(beforeId)) || movedId===beforeId) return false;
   const next=current.filter(id=>id!==movedId);
-  const index=beforeId===null ? next.length : next.indexOf(beforeId);
+  const visibleRest=visible.filter(id=>id!==movedId);
+  const lastVisible=visibleRest.at(-1);
+  const index=beforeId===null
+    ? (lastVisible ? next.indexOf(lastVisible)+1 : next.length)
+    : next.indexOf(beforeId);
+  if(index<0)return false;
   next.splice(index,0,movedId);
   if(next.every((id,i)=>id===current[i])) return false;
   S.settings.columnOrder=next;
-  commit(); // dashboard_settings.payload.columnOrder, commun à tous les membres
+  commit(); // dashboard_settings.payload.columnOrder, shared with all members
   return true;
 }
 function shiftColumn(id,direction){
-  const ids=displayColumns().map(c=>c.id),i=ids.indexOf(id),j=i+direction;
+  const ids=visibleColumns().map(c=>c.id),i=ids.indexOf(id),j=i+direction;
   if(i<0||j<0||j>=ids.length) return false;
   const changed=direction<0 ? moveColumnBefore(id,ids[j]) : moveColumnBefore(id,ids[j+1]||null);
   if(changed)ensureMovedColumnVisible(id);
@@ -595,7 +631,7 @@ function customFieldsHtml(o){
     const name='custom__'+c.id, value=String(o?.customFields?.[c.id] ?? '');
     let control='';
     if(c.type==='boolean'){
-      control=`<select id="field_${c.id}" name="${name}"><option value="">Non renseigné</option><option value="Oui" ${value==='Oui'?'selected':''}>Oui</option><option value="Non" ${value==='Non'?'selected':''}>Non</option></select>`;
+      control=`<select id="field_${c.id}" name="${name}"><option value="">Non renseigné</option><option value="Oui" ${value==='Oui'?'selected':''}>Oui</option><option value="Non" ${value==='Non'?'selected':''}>Non</option><option value="Non applicable" ${value==='Non applicable'?'selected':''}>Non applicable</option></select>`;
     } else {
       const type=c.type==='date'?'date':c.type==='number'?'number':'text';
       control=`<input id="field_${c.id}" name="${name}" type="${type}" ${type==='number'?'step="any"':''} ${type==='text'?'maxlength="500"':''} value="${esc(value)}">`;
@@ -805,17 +841,27 @@ function stageHtml(statut, nature){
   return `<div class="stage ${WON.includes(statut) ? 'delivery' : ''}" title="Étape ${i + 1} sur ${steps}"><div class="meter">${bars}</div><span>${esc(statut || 'Sans statut')}</span></div>`;
 }
 
+// Boutons ◀ ▶ : faire défiler les colonnes sans chercher la barre de défilement
+function updateHScroll(){
+  const t=$('oppTable'),wrap=$('hscroll'); if(!t||!wrap||wrap.hidden) return;
+  const [prev,next]=wrap.querySelectorAll('button');
+  prev.disabled=t.scrollLeft<=2;
+  next.disabled=t.scrollLeft+t.clientWidth>=t.scrollWidth-2;
+}
 function renderOppColumns(){
-  const cols=displayColumns(),added=customColumns();
+  const cols=visibleColumns(),added=customColumns();
   const box=$('oppTable');
   // L'ordre initial sans colonnes supplémentaires conserve l'affichage responsive V1.2.
   // Dès qu'une colonne est ajoutée ou déplacée, on peut voir TOUTES les colonnes
   // avec défilement horizontal, quel que soit leur ordre (PC et smartphone).
-  const wide=added.length>0 || !isDefaultColumnOrder();
+  const wide=true; // V5 : colonnes propres à chaque onglet, grille toujours calculée
   box.classList.toggle('has-custom',wide);
+  $('hscroll').hidden=!wide;
+  requestAnimationFrame(updateHScroll);
   if(wide){
-    box.style.setProperty('--opp-grid',cols.map(c=>c.width).join(' ')+' 32px');
-    box.style.setProperty('--opp-min-width',(1320+added.length*160)+'px');
+    const small=window.matchMedia('(max-width:560px)').matches;
+    box.style.setProperty('--opp-grid',cols.map(c=>c.id==='sujet'&&small?'minmax(170px,1fr)':c.width).join(' ')+' 32px'+(small?' 210px':' 0px'));
+    box.style.setProperty('--opp-min-width',(1420+added.length*160)+'px');
   }else{
     box.style.removeProperty('--opp-grid');
     box.style.removeProperty('--opp-min-width');
@@ -826,13 +872,18 @@ function renderOppColumns(){
       : `<span class="col-label">${esc(c.label)}</span>`;
     return `<div class="col-head ${c.id==='clientDate'?'c-date':''} ${c.id==='montant'?'c-montant':''}" data-col-key="${esc(c.id)}">
       <button type="button" class="col-grip" data-drag-col="${esc(c.id)}" aria-label="Déplacer la colonne ${esc(c.label)}" title="Maintenir et glisser pour déplacer la colonne (ou utiliser les flèches dans +)"><span aria-hidden="true">⠿</span></button>${label}</div>`;
-  }).join('')+'<span class="c-plus"><button type="button" class="add-col-btn" data-open-cols title="Ajouter ou gérer des colonnes" aria-label="Ajouter ou gérer des colonnes">+</button></span>';
+  }).join('')+'<span class="c-plus"><button type="button" class="add-col-btn" data-open-cols title="Ajouter ou gérer des colonnes" aria-label="Ajouter ou gérer des colonnes">+</button></span><span class="scroll-spacer" aria-hidden="true"></span>';
 }
 
+function nextMeetingHtml(o){
+  const d=o.prochainEchange, n=d?diff(d):null;
+  if(d&&n>=0) return `<div class="odate ${n<=3?'soon':''}"><b>${n===0?"Aujourd'hui":n===1?'Demain':fmt(d)}</b><span>RDV prévu</span></div>`;
+  return `<span class="rdv-todo" title="${d?'Dernier échange le '+esc(fmt(d)):'Aucune date saisie'}">RDV à prendre</span>`;
+}
 function renderOpps(M){
   const ids=visibleOppIds(M);
   const q=ui.q.trim().toLowerCase();
-  const cols=displayColumns();
+  const cols=visibleColumns();
   const list=oppOrder(M).filter(o=>ids.has(o.id)).filter(o=>!q||[o.sujet,o.lead,o.contacts,o.acn,o.details,o.commentaire,(o.entites||[]).join(' '),...customColumns().map(c=>o.customFields?.[c.id]||'')].join(' ').toLowerCase().includes(q));
   const kpiOk=o=>!ui.kpi||M.get(o.id)[ui.kpi];
   $('oppCount').textContent=S.opps.filter(o=>o.nature==='Opportunité'&&kpiOk(o)&&periodOk(o)).length;
@@ -848,7 +899,7 @@ function renderOpps(M){
       :cd.past?`<div class="odate past"><b>${fmt(cd.d)}</b><span>${cd.l}, passée</span></div>`
       :`<div class="odate ${cd.n<=3?'soon':''}"><b>${cd.n===0?"Aujourd'hui":cd.n===1?'Demain':fmt(cd.d)}</b><span>${cd.l}</span></div>`;
     const cells={
-      sujet:`<div class="c-sujet" style="min-width:0"><span class="opp-name">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>`,
+      sujet:`<div class="c-sujet" style="min-width:0"><span class="opp-name" title="${esc(o.sujet)}">${esc(o.sujet)}</span><span class="opp-sub">${esc(o.type)}</span></div>`,
       contacts:`<span class="cell clients ${clients?'':'muted'}" title="${esc(clients)}">${esc(clients||'À identifier')}</span>`,
       entites:(o.entites||[]).length?`<span class="ent-cell" title="${esc(o.entites.join(', '))}">${o.entites.map(e=>`<span class="ent-tag">${esc(e)}</span>`).join('')}</span>`:'<span class="cell muted">—</span>',
       statut:stageHtml(o.statut, o.nature),
@@ -857,14 +908,16 @@ function renderOpps(M){
       montant:`<span class="cell c-montant ${o.montant?'':'muted'}" title="${esc(o.montant)}">${esc(o.montant||'À chiffrer')}</span>`,
       clientDate:`<div class="c-date">${date}</div>`,
       mois:effMonth(o)?`<span class="cell" title="Déduit de ${submitLabel(o.type)}">${esc(monthInfo(effMonth(o)).short)}</span>`:'<span class="cell muted">—</span>',
-      quarter:quarterOf(o)?`<span class="qtr">${quarterOf(o)}</span>`:'<span class="cell muted">—</span>'
+      quarter:quarterOf(o)?`<span class="qtr">${quarterOf(o)}</span>`:'<span class="cell muted">—</span>',
+      prochainEchange:`<div class="c-next">${nextMeetingHtml(o)}</div>`,
+      besoinAide:o.besoinAide?'<span class="aide-tag">Oui</span>':'<span class="cell muted">—</span>'
     };
     const content=cols.map(c=>{
       if(!c.isCustom)return cells[c.id];
       const v=columnValue(o,c);
-      return `<span class="cell c-custom ${v?'':'muted'}" title="${esc(v)}">${esc(v||'—')}</span>`;
+      return `<span class="cell c-custom ${v&&v!=='Non applicable'?'':'muted'}" title="${esc(v)}">${esc(v||'—')}</span>`;
     }).join('');
-    return `<button class="opp ${CLOSED_LOST.includes(o.statut)?'is-perdu':''}" data-edit-opp="${esc(o.id)}">${content}<span class="c-plus" aria-hidden="true"></span></button>`;
+    return `<button class="opp ${CLOSED_LOST.includes(o.statut)?'is-perdu':''}" data-edit-opp="${esc(o.id)}">${content}<span class="c-plus" aria-hidden="true"></span><span class="scroll-spacer" aria-hidden="true"></span></button>`;
   }).join('');
 }
 
@@ -1315,6 +1368,10 @@ function openOpp(id){
       <div class="field date-rfp" ${o.type === 'RFP' ? '' : 'hidden'}><label class="lbl" for="f_dd">Décision client</label><input type="date" id="f_dd" name="dateDecision" value="${esc(o.dateDecision)}"></div>
       <div class="field date-std" ${o.type === 'RFP' ? 'hidden' : ''}><label class="lbl" for="f_den">Date d'envoi proposition client</label><input type="date" id="f_den" name="dateEnvoi" value="${esc(o.dateEnvoi)}"></div>
       <div class="field date-std" ${o.type === 'RFP' ? 'hidden' : ''}><label class="lbl" for="f_dpr">Présentation au client</label><input type="date" id="f_dpr" name="datePresentation" value="${esc(o.datePresentation)}"></div>
+      <div class="field nat-orig" ${o.nature === 'Origination' ? '' : 'hidden'}><label class="lbl" for="f_next">Prochain échange avec le client</label><input type="date" id="f_next" name="prochainEchange" value="${esc(o.prochainEchange || '')}"><span class="help">Pour s'assurer qu'un rendez-vous est bien prévu.</span></div>
+      <div class="field nat-opp" ${o.nature === 'Origination' ? 'hidden' : ''} style="justify-content:flex-end">
+        <label class="check-line"><input type="checkbox" name="besoinAide" id="f_aide" ${o.besoinAide ? 'checked' : ''}><span>Besoin d'aide<br><span class="help">À cocher si l'opportunité a besoin d'un appui. Elle apparaîtra dans le slide hebdo.</span></span></label>
+      </div>
       <div class="field" style="justify-content:flex-end">
         <label class="check-line"><input type="checkbox" name="attente" id="f_attente" ${o.attente || autoWait ? 'checked' : ''} ${autoWait ? 'disabled' : ''}><span>En attente de décision client<br><span class="help" id="f_attente_help">${autoWait ? 'Automatique avec ce statut.' : 'Cochez si le client doit encore décider.'}</span></span></label>
       </div>
@@ -1335,6 +1392,8 @@ function openOpp(id){
     const nature = d.querySelector('input[name=nature]:checked').value, sel = $('f_statut');
     const next = fitStatut(sel.value, nature);
     sel.innerHTML = statutsFor(nature).map(s => `<option ${s === next ? 'selected' : ''}>${s}</option>`).join('');
+    d.querySelectorAll('.nat-orig').forEach(el => { el.hidden = nature !== 'Origination'; });
+    d.querySelectorAll('.nat-opp').forEach(el => { el.hidden = nature === 'Origination'; });
   });
   $('f_type').onchange = e => {
     const rfp = e.target.value === 'RFP';
@@ -1352,8 +1411,9 @@ function openOpp(id){
     const sujet = String(f.sujet || '').trim();
     if (!sujet){ $('f_sujet').focus(); toast('Indiquez un sujet'); return; }
     const data = {...o, sujet, v2:true};
-    ['statut','type','nature','priorite','lead','montant','contacts','acn','details','commentaire','dateEcrit','dateOral','dateDecision','dateEnvoi','datePresentation'].forEach(k => data[k] = String(f[k] ?? '').trim());
+    ['statut','type','nature','priorite','lead','montant','contacts','acn','details','commentaire','prochainEchange','dateEcrit','dateOral','dateDecision','dateEnvoi','datePresentation'].forEach(k => data[k] = String(f[k] ?? '').trim());
     data.entites = [...d.querySelectorAll('input[data-ent]:checked')].map(x => x.value);
+    data.besoinAide = !!f.besoinAide;
     if (!NATURES.includes(data.nature)) data.nature = 'Opportunité';
     data.statut = fitStatut(data.statut, data.nature);
     const cb = $('f_attente'); data.attente = cb.disabled ? !!o.attente : cb.checked;
@@ -1382,6 +1442,7 @@ function renderOppTasks(){
 function openColumns(){
   if(fromShare){toast('Les colonnes se configurent dans le tableau de bord connecté');return;}
   if(!S||!signedInUser){toast('Connectez-vous pour gérer les colonnes');return;}
+  if(ui.tab !== 'opps' && ui.tab !== 'orig')return;
   const d=$('dlgCols');
   d.innerHTML=`<div class="dlg-head"><h3>Colonnes du tableau</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
     <div class="dlg-body">
@@ -1392,7 +1453,7 @@ function openColumns(){
     </div>
     <div class="dlg-foot"><span class="help">Cliquez sur une opportunité pour remplir les colonnes personnalisées.</span><div class="right"><button class="btn quiet" type="button" data-close>Fermer</button><button class="btn primary" type="button" id="cm_add">+ Ajouter la colonne</button></div></div>`;
   const fillList=()=>{
-    const cols=displayColumns();
+    const cols=visibleColumns();
     $('cm_list').innerHTML=cols.map((c,i)=>`<div class="col-manager-item">
       <span><span class="col-name">${esc(c.label)}</span><br><span class="col-type">${c.isCustom?COL_TYPES[c.type]:'Colonne d’origine'}</span></span>
       <span class="col-manager-actions">
@@ -1519,77 +1580,133 @@ function clientNames(list){
   return [...set.values()];
 }
 function weeklyData(){
-  const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
-  const active = S.opps.filter(o => !CLOSED_LOST.includes(o.statut));
-  const lost = S.opps.length - active.length;
-  const side = isPro => {
-    const list = active.filter(o => (o.type === 'Proactive') === isPro);
-    const top = list.map(o => ({o, m: parseMontant(o.montant)})).filter(x => x.m)
-      .sort((a,b) => b.m.hi - a.m.hi || b.m.lo - a.m.lo).slice(0, 3);
-    return {list, n: list.length, budget: budgetOf(list), attente: list.filter(o => M.get(o.id).attente).length,
-            proposals: list.filter(o => PROPOSAL.includes(o.statut)).length, top};
-  };
   const now = new Date();
-  const budget = budgetOf(active);
+  const mk = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const q = QUARTERS.find(x => x.v === (monthInfo(mk) || {}).q) || null;
+  const qText = q ? `${q.v} FY27 (${q.label.split(' : ')[1]})` : 'hors exercice FY27';
+  const opps = S.opps.filter(o => o.nature === 'Opportunité');
+  const inQ = q ? opps.filter(o => quarterOf(o) === q.v) : [];
+  const isOpen = o => !WON.includes(o.statut) && !CLOSED_LOST.includes(o.statut);
+  const enCours = inQ.filter(isOpen), gagnees = inQ.filter(o => WON.includes(o.statut)), perdues = inQ.filter(o => o.statut === PERDU);
+  const sansQuarter = q ? opps.filter(o => isOpen(o) && !quarterOf(o)).length : 0;
+  const bcol = customColumns().find(c => /b\s*-?\s*case|business\s*case/i.test(c.label)) || null;
+  const bval = o => bcol ? String(o.customFields?.[bcol.id] ?? '') : '';
+  const bcase = bcol ? enCours.filter(o => bval(o) === 'Oui').length : null;
+  const bcaseNA = bcol ? enCours.filter(o => bval(o) === 'Non applicable').length : 0;
+  const M = new Map(S.opps.map(o => [o.id, metrics(o)]));
+  const aide = opps.filter(o => o.besoinAide && !CLOSED_LOST.includes(o.statut))
+    .sort((x, y) => { const a = clientDate(x), b = clientDate(y); return (a ? a.n : 9999) - (b ? b.n : 9999); });
+  const orig = S.opps.filter(o => o.nature === 'Origination' && isOpen(o)).map(o => {
+    const d = o.prochainEchange && diff(o.prochainEchange) >= 0 ? o.prochainEchange : '';
+    return {o, rdv:d};
+  }).sort((x, y) => (x.rdv ? 0 : 1) - (y.rdv ? 0 : 1) || (x.rdv && y.rdv ? x.rdv.localeCompare(y.rdv) : x.o.sujet.localeCompare(y.o.sujet, 'fr')));
   return {
     dateLabel: `Semaine ${isoWeek(now)}, ${now.toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'})}`,
-    proposals: active.filter(o => PROPOSAL.includes(o.statut)).length,
-    attente: active.filter(o => M.get(o.id).attente).length,
-    budget, clients: clientNames(active).length, lost,
-    pro: side(true), client: side(false), rfp: active.filter(o => o.type === 'RFP').length
+    q, qText, inQ, enCours, gagnees, perdues, sansQuarter, bcol, bcase, bcaseNA, aide, M,
+    orig, planned: orig.filter(x => x.rdv).length, todo: orig.filter(x => !x.rdv).length
   };
 }
 const pl = (n, one, many) => Number(n) > 1 ? many : one;
 const cut = (s, n) => s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s;
-function slideSpec(D){
-  const ink = '231C3A', muted = '6E6886', violet = '7428E8';
+// Le slide hebdo : 1 slide « Opportunités » et 1 slide « Origination » (plus des pages de suite si la liste est longue)
+const SL = {ink:'231C3A', muted:'6E6886', violet:'7428E8', green:'0B8F70', grey:'6E6886', red:'D9432B', amber:'B45309', line:'E3E0EC'};
+function slideKit(){
   const E = [];
-  const T = (text, x, y, w, h, o = {}) => E.push({k:'t', text:String(text), x, y, w, h, size:o.size || 14, bold:!!o.bold, color:o.color || ink, align:o.align || 'left', valign:o.valign || 'top'});
+  const T = (text, x, y, w, h, o = {}) => E.push({k:'t', text:String(text), x, y, w, h, size:o.size || 14, bold:!!o.bold, color:o.color || SL.ink, align:o.align || 'left', valign:o.valign || 'top'});
   const R = (x, y, w, h, fill) => E.push({k:'r', x, y, w, h, fill});
-  T('Point hebdo opportunités Michelin', 0.6, 0.4, 8.6, 0.75, {size:32, bold:true, valign:'middle'});
-  T(D.dateLabel, 8.9, 0.4, 3.83, 0.75, {size:14, color:muted, align:'right', valign:'middle'});
-  const unpriced = D.budget.unpriced;
-  const kpis = [
-    {n:D.proposals, l:pl(D.proposals, 'proposition en cours', 'propositions en cours'), c:'réponse ou proposition écrite', w:2.7, size:44},
-    {n:D.attente, l:pl(D.attente, 'décision attendue', 'décisions attendues'), c:'en attente de décision client', w:2.7, size:44},
-    {n:fmtRange(D.budget), l:'budget total estimé', c: unpriced ? `${unpriced} opportunité${unpriced > 1 ? 's' : ''} non chiffrée${unpriced > 1 ? 's' : ''}` : 'toutes les opportunités sont chiffrées', w:3.38, size:26},
-    {n:D.clients, l:pl(D.clients, 'client concerné', 'clients concernés'), c:'interlocuteurs Michelin', w:2.45, size:44}
-  ];
-  let x = 0.6;
-  kpis.forEach(k => {
-    R(x, 1.45, k.w, 1.7, 'F3F0FB');
-    T(k.n, x + 0.25, 1.55, k.w - 0.5, 0.85, {size:k.size, bold:true, color:violet, valign:'bottom'});
-    T(k.l, x + 0.25, 2.47, k.w - 0.5, 0.32, {size:14, bold:true});
-    T(k.c, x + 0.25, 2.77, k.w - 0.5, 0.28, {size:11, color:muted});
-    x += k.w + 0.3;
-  });
-  const cw = 5.915;
-  [[D.pro, 'Proactives', 'Initiées par Accenture', '0B8F70', 'E8F5F0', 0.6],
-   [D.client, D.rfp ? 'Besoins client et RFP' : 'Besoins client', D.rfp ? `Demandes exprimées par Michelin, dont ${D.rfp} RFP` : 'Demandes exprimées par Michelin', '2F6BEA', 'EDF2FE', 0.6 + cw + 0.3]].forEach(([s, title, sub, col, tint, cx]) => {
-    R(cx, 3.45, cw, 3.35, tint);
-    T(title, cx + 0.3, 3.62, cw - 0.6, 0.45, {size:20, bold:true, color:col});
-    T(sub, cx + 0.3, 4.05, cw - 0.6, 0.3, {size:12, color:muted});
-    let sx = cx + 0.3;
-    [[s.n, pl(s.n, 'opportunité', 'opportunités'), 1.35], [fmtRange(s.budget), 'budget estimé', 2.5], [s.attente, pl(s.attente, 'décision attendue', 'décisions attendues'), 1.45]].forEach(([n, l, w]) => {
-      T(n, sx, 4.45, w, 0.5, {size:24, bold:true, valign:'bottom'});
-      T(l, sx, 4.96, w, 0.28, {size:12, color:muted});
-      sx += w;
-    });
-    T('Principales opportunités', cx + 0.3, 5.4, cw - 0.6, 0.3, {size:12, bold:true, color:muted});
-    if (!s.top.length) T("Aucune opportunité chiffrée pour l'instant", cx + 0.3, 5.72, cw - 0.6, 0.33, {size:14, color:muted});
-    s.top.forEach((t, i) => {
-      const y = 5.72 + i * 0.33;
-      T(cut(t.o.sujet, 32), cx + 0.3, y, 3.2, 0.33, {size:14, valign:'middle'});
-      T(fmtRange(t.m), cx + 3.5, y, cw - 3.8, 0.33, {size:14, bold:true, align:'right', valign:'middle'});
-    });
-  });
-  T(`Propositions en cours : statuts Réponse écrite et Proposition écrite. Budget : somme des fourchettes estimées, hors opportunités perdues ou annulées${D.lost ? ` (${D.lost})` : ''}. Source : dashboard Opportunités FY27.`,
-    0.6, 6.95, 12.13, 0.3, {size:10, color:muted});
-  return E;
+  return {E, T, R};
 }
-function slideNotes(D){
-  const line = o => `- ${o.sujet} : ${o.statut}${o.montant ? ', ' + o.montant : ''}`;
-  return `Proactives (${D.pro.n})\n${D.pro.list.map(line).join('\n')}\n\n${D.rfp ? 'Besoins client et RFP' : 'Besoins client'} (${D.client.n})\n${D.client.list.map(line).join('\n')}`;
+function slideHeader(K, title, D){
+  K.T(title, 0.6, 0.4, 8.6, 0.75, {size:32, bold:true, valign:'middle'});
+  K.T(D.dateLabel, 8.9, 0.4, 3.83, 0.75, {size:14, color:SL.muted, align:'right', valign:'middle'});
+}
+function kpiBlocks(K, items, y, h){
+  const gap = 0.3, w = (12.13 - gap * (items.length - 1)) / items.length;
+  items.forEach((k, i) => {
+    const x = 0.6 + i * (w + gap);
+    K.R(x, y, w, h, k.fill || 'F3F0FB');
+    K.T(k.n, x + 0.25, y + 0.12, w - 0.5, h * 0.5, {size:k.size || 44, bold:true, color:k.color || SL.violet, valign:'bottom'});
+    K.T(k.l, x + 0.25, y + h * 0.5 + 0.18, w - 0.5, 0.32, {size:15, bold:true});
+    if (k.c) K.T(k.c, x + 0.25, y + h * 0.5 + 0.5, w - 0.5, 0.3, {size:11, color:SL.muted});
+  });
+}
+function slideOpps(D){
+  const K = slideKit(); slideHeader(K, 'Opportunités', D);
+  K.R(0.6, 1.3, 12.13, 0.55, 'F3F0FB');
+  K.T(`Quarter en cours : ${D.qText}`, 0.85, 1.3, 11.6, 0.55, {size:16, bold:true, color:SL.violet, valign:'middle'});
+  const n = D.enCours.length;
+  kpiBlocks(K, [
+    {n, l:'en cours', c:'À qualifier ou Réponse écrite'},
+    {n:D.gagnees.length, l:pl(D.gagnees.length, 'gagnée', 'gagnées'), color:SL.green, fill:'E8F5F0'},
+    {n:D.perdues.length, l:pl(D.perdues.length, 'perdue', 'perdues'), color:SL.grey, fill:'F1F0F4'},
+    {n:D.bcol ? D.bcase : '—', l:pl(D.bcase, 'Bcase réalisé', 'Bcase réalisés'), color:SL.ink,
+     c:D.bcol ? `sur ${n} opportunité${n > 1 ? 's' : ''} en cours${D.bcaseNA ? `, dont ${D.bcaseNA} non applicable${D.bcaseNA > 1 ? 's' : ''}` : ''}` : 'colonne Bcase introuvable'}
+  ], 2.1, 1.75);
+  K.R(0.6, 4.1, 12.13, 2.7, 'FFF4E5');
+  K.T('Besoin d’aide', 0.9, 4.22, 6, 0.45, {size:20, bold:true, color:SL.amber});
+  K.T(D.aide.length ? `${D.aide.length} opportunité${D.aide.length > 1 ? 's' : ''} signalée${D.aide.length > 1 ? 's' : ''} dans les fiches` : '', 6.9, 4.22, 5.63, 0.45, {size:12, color:SL.muted, align:'right', valign:'middle'});
+  if (!D.aide.length) K.T('Aucune opportunité n’a signalé de besoin d’aide.', 0.9, 4.85, 11.6, 0.4, {size:14, color:SL.muted});
+  const shown = D.aide.length > 5 ? D.aide.slice(0, 4) : D.aide;
+  shown.forEach((o, i) => {
+    const y = 4.82 + i * 0.37, nx = clientDate(o);
+    K.T(cut(o.sujet, 50), 0.9, y, 4.7, 0.37, {size:13, bold:true, valign:'middle'});
+    K.T(cut(o.lead || 'Lead à définir', 28), 5.7, y, 2.5, 0.37, {size:12, color:SL.muted, valign:'middle'});
+    K.T(o.statut, 8.3, y, 1.9, 0.37, {size:12, valign:'middle'});
+    K.T(nx ? `${nx.l} ${fmt(nx.d)}` : 'Sans date', 9.9, y, 2.63, 0.37, {size:12, bold:!!nx, align:'right', valign:'middle'});
+  });
+  if (D.aide.length > 5) K.T(`+ ${D.aide.length - 4} autres : liste complète dans les notes du PowerPoint`, 0.9, 4.82 + 4 * 0.37, 11.6, 0.37, {size:12, color:SL.muted, valign:'middle'});
+  K.T(`Quarter calculé à partir de la date de soumission de la proposition.${D.sansQuarter ? ` ${D.sansQuarter} opportunité${D.sansQuarter > 1 ? 's' : ''} en cours sans date ${D.sansQuarter > 1 ? 'ne sont' : 'n’est'} pas comptée${D.sansQuarter > 1 ? 's' : ''}.` : ''}${D.bcol ? ` Bcase : colonne « ${D.bcol.label} » à Oui.` : ''} Source : dashboard Opportunités FY27.`,
+    0.6, 6.95, 12.13, 0.3, {size:10, color:SL.muted});
+  return K.E;
+}
+function kpiInline(K, items, y, h){
+  const gap = 0.3, w = (12.13 - gap * (items.length - 1)) / items.length;
+  items.forEach((k, i) => {
+    const x = 0.6 + i * (w + gap);
+    K.R(x, y, w, h, k.fill || 'F3F0FB');
+    K.T(k.n, x + 0.25, y, 1.25, h, {size:34, bold:true, color:k.color || SL.violet, valign:'middle'});
+    K.T(k.l, x + 1.55, y + 0.17, w - 1.75, 0.33, {size:15, bold:true});
+    K.T(k.c, x + 1.55, y + 0.52, w - 1.75, 0.3, {size:11, color:SL.muted});
+  });
+}
+function slidesOrig(D){
+  const pages = [], first = 14, next = 14, RH = 0.28;
+  const chunks = [D.orig.slice(0, first)];
+  for (let i = first; i < D.orig.length; i += next) chunks.push(D.orig.slice(i, i + next));
+  chunks.forEach((rows, p) => {
+    const K = slideKit(); slideHeader(K, p ? 'Origination (suite)' : 'Origination', D);
+    let y0 = 1.4;
+    if (!p){
+      kpiInline(K, [
+        {n:D.orig.length, l:pl(D.orig.length, 'sujet en origination', 'sujets en origination'), c:'besoin client à comprendre'},
+        {n:D.planned, l:pl(D.planned, 'RDV planifié', 'RDV planifiés'), c:'prochain échange à venir', color:SL.green, fill:'E8F5F0'},
+        {n:D.todo, l:'RDV à prendre', c:'aucune date à venir dans la fiche', color:SL.red, fill:'FDECEA'}
+      ], 1.3, 0.95);
+      y0 = 2.45;
+    }
+    K.T('Sujet', 0.85, y0, 4.4, 0.3, {size:11, bold:true, color:SL.muted});
+    K.T('Clients Michelin', 5.35, y0, 4.6, 0.3, {size:11, bold:true, color:SL.muted});
+    K.T('Prochain échange', 10.05, y0, 2.48, 0.3, {size:11, bold:true, color:SL.muted});
+    K.R(0.6, y0 + 0.31, 12.13, 0.02, SL.line);
+    if (!rows.length) K.T('Aucun sujet en origination pour le moment.', 0.85, y0 + 0.45, 11.6, 0.4, {size:14, color:SL.muted});
+    rows.forEach((r, i) => {
+      const y = y0 + 0.36 + i * RH;
+      if (i % 2) K.R(0.6, y, 12.13, RH, 'F7F6FB');
+      const clients = String(r.o.contacts || '').split('\n').map(x => x.trim()).filter(Boolean).join(', ') || 'À identifier';
+      K.T(cut(r.o.sujet, 50), 0.85, y, 4.4, RH, {size:11.5, bold:true, valign:'middle'});
+      K.T(cut(clients, 64), 5.35, y, 4.6, RH, {size:11.5, color:clients === 'À identifier' ? SL.muted : SL.ink, valign:'middle'});
+      K.T(r.rdv ? `RDV le ${fmt(r.rdv)}` : 'RDV à prendre', 10.05, y, 2.48, RH, {size:11.5, bold:true, color:r.rdv ? SL.green : SL.red, valign:'middle'});
+    });
+    K.T('Prochain échange : date saisie dans la fiche. « RDV à prendre » : aucune date à venir. Source : dashboard Opportunités FY27.', 0.6, 6.95, 12.13, 0.3, {size:10, color:SL.muted});
+    pages.push(K.E);
+  });
+  return pages;
+}
+function slideSpecs(D){ return [{title:'Opportunités', E:slideOpps(D)}, ...slidesOrig(D).map((E, i) => ({title:i ? 'Origination (suite)' : 'Origination', E}))]; }
+function slideNotes(D, i){
+  const line = o => `- ${o.sujet} : ${o.statut}${o.lead ? ', ' + o.lead : ''}`;
+  if (i === 0) return `Quarter en cours : ${D.qText}\n\nEn cours (${D.enCours.length})\n${D.enCours.map(line).join('\n')}\n\nGagnées (${D.gagnees.length})\n${D.gagnees.map(line).join('\n')}\n\nPerdues (${D.perdues.length})\n${D.perdues.map(line).join('\n')}\n\nBesoin d'aide (${D.aide.length})\n${D.aide.map(line).join('\n')}`;
+  return `Origination (${D.orig.length})\n${D.orig.map(r => `- ${r.o.sujet} | Contacts Michelin : ${String(r.o.contacts || '').replace(/\n/g, ', ') || 'À identifier'} | ${r.rdv ? 'RDV le ' + fmt(r.rdv) : 'RDV à prendre'}`).join('\n')}`;
 }
 function slideHtml(E){
   const pct = (v, total) => (v / total * 100).toFixed(3) + '%';
@@ -1614,16 +1731,18 @@ async function buildPptxBlob(D){
   const P = await loadPptx();
   const pres = new P();
   pres.layout = 'LAYOUT_WIDE';
-  pres.title = 'Point hebdo opportunités Michelin';
+  pres.title = 'Point hebdo Opportunités et Origination';
   pres.theme = {headFontFace:'Calibri', bodyFontFace:'Calibri'};
-  const slide = pres.addSlide();
-  slide.background = {color:'FFFFFF'};
   const rr = (pres.shapes && pres.shapes.ROUNDED_RECTANGLE) || 'roundRect';
-  slideSpec(D).forEach((e, i) => {
-    if (e.k === 'r') slide.addShape(rr, {x:e.x, y:e.y, w:e.w, h:e.h, fill:{color:e.fill}, line:{color:e.fill, width:0.5}, rectRadius:0.12, objectName:'Bloc ' + (i + 1)});
-    else slide.addText(e.text, {x:e.x, y:e.y, w:e.w, h:e.h, fontFace:'Calibri', fontSize:e.size, bold:e.bold, color:e.color, align:e.align, valign:e.valign, margin:0, isTextBox:true, fit:'none', objectName:'Texte ' + (i + 1)});
+  slideSpecs(D).forEach((sp, si) => {
+    const slide = pres.addSlide();
+    slide.background = {color:'FFFFFF'};
+    sp.E.forEach((e, i) => {
+      if (e.k === 'r') slide.addShape(rr, {x:e.x, y:e.y, w:e.w, h:e.h, fill:{color:e.fill}, line:{color:e.fill, width:0.5}, rectRadius:e.h < 0.1 ? 0 : 0.12, objectName:'Bloc ' + (i + 1)});
+      else slide.addText(e.text, {x:e.x, y:e.y, w:e.w, h:e.h, fontFace:'Calibri', fontSize:e.size, bold:e.bold, color:e.color, align:e.align, valign:e.valign, margin:0, isTextBox:true, fit:'none', objectName:'Texte ' + (i + 1)});
+    });
+    slide.addNotes(slideNotes(D, si === 0 ? 0 : 1));
   });
-  slide.addNotes(slideNotes(D));
   return pres.write({outputType:'blob'});
 }
 function openSlide(){
@@ -1631,8 +1750,8 @@ function openSlide(){
   const d = $('dlgSlide');
   d.innerHTML = `<div class="dlg-head"><h3>Slide hebdo</h3><button type="button" class="x" data-close aria-label="Fermer">×</button></div>
     <div class="dlg-body" style="display:block">
-      <p class="help" style="margin:0 0 12px">Calculé à partir de vos données du jour. La liste complète des opportunités est dans les notes du PowerPoint.</p>
-      <div class="slide-frame"><div class="slide">${slideHtml(slideSpec(D))}</div></div>
+      <p class="help" style="margin:0 0 12px">Calculé à partir de vos données du jour. Les listes complètes sont dans les notes du PowerPoint.</p>
+      ${slideSpecs(D).map((sp, i) => `<p class="slide-label">Slide ${i + 1} : ${esc(sp.title)}</p><div class="slide-frame"><div class="slide">${slideHtml(sp.E)}</div></div>`).join('')}
     </div>
     <div class="dlg-foot"><div></div><div class="right"><button type="button" class="btn quiet" data-close>Fermer</button><button type="button" class="btn primary" id="sl_pptx">Télécharger le PowerPoint</button></div></div>`;
   d.showModal();
@@ -1825,6 +1944,13 @@ $('alertBackup').onclick = () => download(`sauvegarde_opportunites_${stamp()}.js
 $('showDone').onchange = e => { ui.showDone = e.target.checked; render(); };
 $('personFilter').onchange = e => { ui.person = e.target.value; render(); };
 $('search').oninput = e => { ui.q = e.target.value; render(); };
+$('hscroll').addEventListener('click', e => {
+  const b = e.target.closest('[data-hscroll]'); if (!b) return;
+  const t = $('oppTable'); t.scrollBy({left: Number(b.dataset.hscroll) * Math.max(240, t.clientWidth * 0.6), behavior:'smooth'});
+});
+$('oppTable').addEventListener('scroll', updateHScroll, {passive:true});
+window.addEventListener('resize', updateHScroll);
+let resizeTimer; window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (S) renderOppColumns(); }, 200); });
 $('periodFilter').innerHTML = '<option value="">Toutes les périodes</option>' + QUARTERS.map(q =>
   `<option value="${q.v}">${q.label}</option>` + MONTHS.filter(m => m.q === q.v).map(m => `<option value="${m.v}">\u00a0\u00a0\u00a0${m.long}</option>`).join('')).join('');
 $('periodFilter').onchange = e => { ui.period = e.target.value; render(); };
@@ -1844,7 +1970,7 @@ document.querySelector('.tabs').addEventListener('keydown', e => {
 });
 
 window.addEventListener('error', e => {
-  try { alertMsg('<b>Une erreur empêche l\'affichage complet.</b> Rechargez la page. Si cela continue, envoyez ce message à Claude : ' + esc(e.message)); } catch(_){}
+  try { alertMsg('<b>Une erreur empêche l\'affichage complet.</b> Rechargez la page. Si cela continue, transmettez ce message au support : ' + esc(e.message)); } catch(_){}
 });
 try { load(); } catch(e){ try { alertMsg('<b>Une erreur empêche l\'affichage.</b> ' + esc(e.message)); } catch(_){} }
 </script>
